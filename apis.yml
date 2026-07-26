@@ -1,0 +1,205 @@
+aid: crea
+url: https://raw.githubusercontent.com/api-evangelist/crea/refs/heads/main/apis.yml
+name: CREA (REALTOR.ca)
+kind: company
+description: >-
+  The Canadian Real Estate Association (CREA) is the national industry body for Canadian
+  residential real estate, representing roughly 160,000 REALTORS through some 60 member
+  boards and associations, owning the MLS and REALTOR trademarks in Canada, and operating
+  REALTOR.ca - the country's single national consumer listing portal. Where the United
+  States fragments into roughly 500 independently governed MLSs, Canada consolidates: CREA
+  runs the REALTOR.ca Data Distribution Facility (DDF), one national syndication seam that
+  collects listing content from member boards' MLS Systems and redistributes it to member
+  websites, franchisor pools, and a network of Real Estate Advertising Websites. That makes
+  CREA simultaneously the standards-setter (it writes the DDF Policy and Rules that boards
+  must adopt and enforce), the operator of the pipe, and the gatekeeper of the data. Its
+  API posture is unusually good for an industry body and still firmly gated. Three real
+  machine-readable contracts are downloadable anonymously - an OpenAPI 3.0.4 document for
+  the DDF Web API served from ddfapi.realtor.ca/swagger/v1/swagger.json and embedded in the
+  public Redoc site at ddfapi-docs.realtor.ca, an OpenAPI 3.0.1 document for the REALTOR.ca
+  Board API at boardapi-docs.realtor.ca, and a full OpenID Connect discovery document at
+  identity.crea.ca. The DDF Web API is an OData v4 surface normalized to the RESO Data
+  Dictionary and described by CREA as built on the RESO Web API specification, but CREA is
+  RESO-aligned rather than RESO-certified - it does not appear in RESO's public certification
+  directory of 578 organizations, where the only Canadian entries are individual boards such
+  as the Toronto Regional Real Estate Board and Greater Vancouver REALTORS, none of them
+  Certified Current. Nothing is self-serve. There is no signup, no sandbox and no free tier;
+  client_id and client_secret are, in CREA's own words, provided by CREA. A REALTOR must
+  opt in through the DDF Dashboard on CREA's member portal, and a third-party developer must
+  enter a data access agreement with CREA as a Technology Provider operating a National Pool
+  Website or Member Website on behalf of that opted-in member. The OData $metadata document,
+  the actual RESO contract, returns HTTP 401 to anonymous callers. No open, unlicensed
+  Canadian listing dataset exists behind any of it.
+image: https://www.crea.ca/dist/favicons/apple-touch-icon.png
+tags:
+- Real Estate
+- Canada
+- Property Listings
+- MLS
+- IDX
+- RESO
+- OData
+- Industry Body
+- PropTech
+- Data Syndication
+created: '2026-07-26'
+modified: '2026-07-26'
+specificationVersion: '0.19'
+apis:
+- aid: crea:realtor-ca-ddf-web-api
+  name: REALTOR.ca DDF Web API
+  description: >-
+    The REALTOR.ca DDF (Data Distribution Facility) Web API is CREA's national listing
+    syndication API. CREA documents it as a platform that "allows you to query MLS System
+    data using the RESO Web API specification, which is based on OData" and states that
+    "MLS System data is normalized based on the RESO Data Dictionary standards". It exposes
+    OData v4 collections for Property, Member, Office, OpenHouse and Destination, each with
+    a key-addressed single-record form, plus Replication endpoints (PropertyReplication,
+    MemberReplication, OfficeReplication) sorted by modification timestamp for periodic
+    synchronization. Standard OData query options ($select, $filter, $top, $skip, $expand)
+    are supported. Authentication is OAuth 2.0 client credentials against
+    https://identity.crea.ca/connect/token with scope DDFApi_Read, returning a Bearer token
+    valid for 60 minutes; credentials are issued by CREA against an active DDF data feed and
+    an inactive feed yields no token. The OData $metadata document at
+    https://ddfapi.realtor.ca/odata/v1/$metadata is the authoritative RESO-shaped contract
+    but returned HTTP 401 (WWW-Authenticate: Bearer) to an anonymous probe on 2026-07-26 and
+    could not be harvested. The OpenAPI document, by contrast, is served anonymously.
+  humanURL: https://ddfapi-docs.realtor.ca/
+  baseURL: https://ddfapi.realtor.ca/odata/v1
+  tags:
+  - Property Listings
+  - MLS
+  - RESO
+  - OData
+  - Syndication
+  - Canada
+  properties:
+  - type: OpenAPI
+    url: openapi/crea-realtor-ca-ddf-web-api-openapi.json
+    name: REALTOR.ca DDF Web API OpenAPI 3.0.4, extracted verbatim from the public Redoc documentation at ddfapi-docs.realtor.ca (HTTP 200, anonymous, 2026-07-26)
+  - type: OpenAPI
+    url: openapi/crea-realtor-ca-ddf-web-api-swagger-endpoint-openapi.json
+    name: REALTOR.ca DDF Web API OpenAPI 3.0.4 as served from https://ddfapi.realtor.ca/swagger/v1/swagger.json (HTTP 200, anonymous, 2026-07-26)
+  - type: Documentation
+    url: https://ddfapi-docs.realtor.ca/
+  - type: APIReference
+    url: https://ddfapi.realtor.ca/api-docs
+  - type: OpenAPI
+    url: https://ddfapi.realtor.ca/swagger/v1/swagger.json
+    name: Live OpenAPI JSON endpoint (HTTP 200, anonymous)
+  - type: ChangeLog
+    url: https://ddfapi-docs.realtor.ca/releasenotes
+  - type: Authentication
+    url: openapi/crea-identity-openid-configuration.json
+    name: OpenID Connect discovery document for identity.crea.ca (HTTP 200, anonymous)
+  - type: Documentation
+    url: https://www.crea.ca/technology/realtor-ca-for-realtors/realtor-ca-tools/realtor-ca-ddf/
+    name: CREA product page for REALTOR.ca DDF
+  - type: TermsOfService
+    url: https://www.crea.ca/files/technology/english/DDFR-Policy-and-Rules-February-2024-ENG.pdf
+    name: REALTOR.ca DDF Policy and Rules, January 2024 (HTTP 200, anonymous PDF)
+  - type: SupportForum
+    url: https://support.crea.ca/DDF
+    name: REALTOR.ca DDF community and support forum
+- aid: crea:realtor-ca-ddf-lead-api
+  name: REALTOR.ca DDF Lead API
+  description: >-
+    The DDF Lead API is a single documented POST endpoint, /v1/Lead/CreateLead, on the same
+    ddfapi.realtor.ca host as the DDF Web API. CREA requires it because REALTOR email
+    addresses are deliberately excluded from the DDF Web API payload - "Real Estate
+    Advertising Websites (REAW) are required to use the DDF lead API, as email addresses are
+    not included in the DDF Web API". A syndicating site presents an "Email REALTOR" form to
+    a consumer and posts the resulting lead through this endpoint rather than emailing the
+    agent directly. It is described in the same public OpenAPI document as the rest of DDF
+    and carries the same OAuth 2.0 client-credentials gate.
+  humanURL: https://ddfapi-docs.realtor.ca/
+  baseURL: https://ddfapi.realtor.ca
+  tags:
+  - Leads
+  - Property Listings
+  - Canada
+  properties:
+  - type: OpenAPI
+    url: openapi/crea-realtor-ca-ddf-web-api-openapi.json
+    name: Lead endpoint is defined as POST /v1/Lead/CreateLead in the DDF Web API OpenAPI document
+  - type: Documentation
+    url: https://ddfapi-docs.realtor.ca/
+  - type: Authentication
+    url: openapi/crea-identity-openid-configuration.json
+- aid: crea:realtor-ca-board-api
+  name: REALTOR.ca Board API
+  description: >-
+    The REALTOR.ca Board API is a separate, smaller roster-distribution API for CREA's member
+    boards and associations rather than for listing consumers. CREA describes it as "a data
+    distribution API that allows Boards to access Members and Offices roster information
+    built on modern industry standards" and states that "Board Data API is normalized based
+    on the RESO Data Dictionary standards". Boards can enter data-sharing agreements with
+    other boards to pull roster information for consenting partner boards. It exposes four
+    documented operations - GET /Member, GET /Member/{MemberNationalAssociationId},
+    GET /Office and GET /Office/{OfficeNationalAssociationId} - and is plain JSON rather than
+    OData; every request must carry an Accept header of application/json or the service
+    answers HTTP 406 "Invalid Accept Header". Authentication is OAuth 2.0 client credentials
+    at https://identity.crea.ca/connect/token with scope BoardDataApi.read. Credentials are
+    provided by CREA to boards; there is no self-serve path.
+  humanURL: https://boardapi-docs.realtor.ca/
+  baseURL: https://boardapi.realtor.ca/
+  tags:
+  - Roster
+  - Agents
+  - Brokerages
+  - RESO
+  - Canada
+  properties:
+  - type: OpenAPI
+    url: openapi/crea-realtor-ca-board-api-openapi.json
+    name: REALTOR.ca Board API OpenAPI 3.0.1, extracted verbatim from the public Redoc documentation at boardapi-docs.realtor.ca (HTTP 200, anonymous, 2026-07-26)
+  - type: Documentation
+    url: https://boardapi-docs.realtor.ca/
+  - type: Authentication
+    url: openapi/crea-identity-openid-configuration.json
+common:
+- type: Website
+  url: https://www.crea.ca/
+- type: Website
+  url: https://www.realtor.ca/
+  name: REALTOR.ca national consumer listing portal
+- type: About
+  url: https://www.crea.ca/who-we-are/
+- type: Documentation
+  url: https://ddfapi-docs.realtor.ca/
+  name: REALTOR.ca DDF Web API documentation
+- type: Documentation
+  url: https://boardapi-docs.realtor.ca/
+  name: REALTOR.ca Board API documentation
+- type: Authentication
+  url: https://identity.crea.ca/.well-known/openid-configuration
+  name: CREA OpenID Connect discovery document, served anonymously
+- type: Login
+  url: https://ddf.realtor.ca/
+  name: REALTOR.ca DDF Dashboard, member login via sso.realtor.ca
+- type: TermsOfService
+  url: https://www.crea.ca/files/technology/english/DDFR-Policy-and-Rules-February-2024-ENG.pdf
+  name: REALTOR.ca DDF Policy and Rules, January 2024
+- type: SupportForum
+  url: https://support.crea.ca/DDF
+- type: Support
+  url: mailto:support@realtor.ca
+  name: REALTOR Support contact listed in the DDF Web API OpenAPI document
+- type: SecurityTxt
+  url: https://www.crea.ca/.well-known/security.txt
+- type: PrivacyPolicy
+  url: https://www.crea.ca/privacy/
+- type: Statistics
+  url: https://www.crea.ca/housing-market-stats/
+  name: Canadian housing market statistics, published as web reports rather than as an API
+- type: Statistics
+  url: https://stats.crea.ca/
+  name: CREA Stats
+- type: Blog
+  url: https://www.creacafe.ca/
+  name: CREA Cafe
+- type: LinkedIn
+  url: https://www.linkedin.com/company/canadian-real-estate-association
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
