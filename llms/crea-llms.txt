@@ -1,0 +1,89 @@
+# CREA (REALTOR.ca)
+
+> The Canadian Real Estate Association is the national industry body for Canadian residential
+> real estate — roughly 160,000 REALTORS through some 60 member boards — and it owns the MLS
+> and REALTOR trademarks in Canada and operates REALTOR.ca, the country's single national
+> consumer listing portal. Where the United States fragments into roughly 500 independently
+> governed MLSs, Canada consolidates: CREA runs the REALTOR.ca Data Distribution Facility
+> (DDF), one national syndication seam that collects listing content from member boards' MLS
+> Systems and redistributes it to member websites, franchisor pools and Real Estate Advertising
+> Websites. Three machine-readable contracts are downloadable anonymously; every runtime
+> surface behind them is gated by CREA-issued credentials.
+
+Generated 2026-07-26 by the API Evangelist enrichment pipeline. CREA publishes no llms.txt of
+its own (`/llms.txt` returned HTTP 404 on both documentation hosts), so this file is generated
+from apis.yml and the artifacts in this repository.
+
+Access model in one paragraph: nothing is self-serve. There is no signup, no sandbox and no
+free tier. `client_id` and `client_secret` are, in CREA's words, provided by CREA. A REALTOR
+opts a data feed in through the DDF Dashboard; a third-party developer must enter a data access
+agreement with CREA as a Technology Provider operating a National Pool Website or Member
+Website on behalf of that opted-in member. The OData `$metadata` document — the actual
+RESO-shaped contract — returns HTTP 401 to anonymous callers. No open, unlicensed Canadian
+listing dataset exists behind any of it.
+
+## APIs
+
+- [REALTOR.ca DDF Web API](https://ddfapi-docs.realtor.ca/): OData v4 listing syndication API
+  normalized to the RESO Data Dictionary. Base URL `https://ddfapi.realtor.ca/odata/v1`.
+  Collections: Property, Member, Office, OpenHouse, Destination, plus PropertyReplication,
+  MemberReplication and OfficeReplication for incremental sync. 17 operations.
+- [REALTOR.ca DDF Lead API](https://ddfapi-docs.realtor.ca/): a single POST endpoint,
+  `/v1/Lead/CreateLead`, on the same host. Required because REALTOR email addresses are
+  deliberately excluded from the DDF Web API payload. The only write operation in the estate.
+- [REALTOR.ca Board API](https://boardapi-docs.realtor.ca/): roster distribution for CREA's
+  member boards. Base URL `https://boardapi.realtor.ca/`. Plain JSON, four operations, keyed on
+  the national identifier space. Every request must send `Accept: application/json` or the host
+  returns HTTP 406.
+
+## Specs
+
+- [DDF Web API OpenAPI 3.0.4 (Redoc copy)](openapi/crea-realtor-ca-ddf-web-api-openapi.json) — 17 operations, 157 schemas, 35KB narrative description
+- [DDF Web API OpenAPI 3.0.4 (API host copy)](openapi/crea-realtor-ca-ddf-web-api-swagger-endpoint-openapi.json) — served live at https://ddfapi.realtor.ca/swagger/v1/swagger.json
+- [Board API OpenAPI 3.0.1](openapi/crea-realtor-ca-board-api-openapi.json) — 4 operations
+- [OpenID Connect discovery](well-known/crea-openid-configuration.json) — https://identity.crea.ca/.well-known/openid-configuration
+- OData CSDL `$metadata`: https://ddfapi.realtor.ca/odata/v1/$metadata — **HTTP 401 anonymously**; the authoritative field/lookup contract cannot be read without credentials
+
+## Auth
+
+- [Authentication profile](authentication/crea-authentication.yml) — OAuth 2.0 client credentials against `https://identity.crea.ca/connect/token`; Bearer token, 3600s, non-sliding
+- [OAuth scopes](scopes/crea-scopes.yml) — `DDFApi_Read`, `BoardDataApi.read`, `OfferManagementApi.read.write` (undocumented), `openid`, `offline_access`
+- [Well-known surface](well-known/crea-well-known.yml)
+
+## Artifacts
+
+- [API conventions](conventions/crea-conventions.yml) — OData query surface, two different pagination models, UTC timestamps, replication pattern, no idempotency, no published rate limits
+- [Error catalog](errors/crea-problem-types.yml) — both error tables and both envelopes
+- [Data model](data-model/crea-data-model.yml) — Property / Member / Office / OpenHouse / Destination and the polymorphic Media, PropertyRoom and SocialMedia children
+- [Lifecycle](lifecycle/crea-lifecycle.yml) — v1 forever, no status page, no SLA, no deprecation policy
+- [Changelog](changelog/crea-changelog.yml) — 24 dated releases, 2022-06-08 to 2026-05-07
+- [Conformance](conformance/crea-conformance.yml) — OData v4 yes, RESO aligned but **not certified**, RFC 9457 no
+- [Agent skills](skills/_index.yml) — five packaged flows
+- [MCP](mcp/crea-mcp.yml) and [tool crosswalk](mcp/crea-tool-crosswalk.yml) — no CREA-operated server; one community server
+- [Agentic access](agentic-access/crea-agentic-access.yml) — 38 operations classified, 36 read / 2 write
+- [Packages](packages/crea-packages.yml) — no first-party SDKs anywhere
+- [Components](components/crea-components.yml) — the mandatory "Powered by REALTOR.ca" badge embeds
+- [Domain security](security/crea-domain-security.yml), [vulnerability disclosure](security/crea-vulnerability-disclosure.yml)
+- [Overlays](overlays/) — production servers, undeclared securitySchemes and stable operationIds added non-destructively
+
+## Docs
+
+- [DDF Web API documentation](https://ddfapi-docs.realtor.ca/)
+- [DDF Web API release notes](https://ddfapi-docs.realtor.ca/releasenotes)
+- [Board API documentation](https://boardapi-docs.realtor.ca/)
+- [CREA product page for REALTOR.ca DDF](https://www.crea.ca/technology/realtor-ca-for-realtors/realtor-ca-tools/realtor-ca-ddf/)
+- [DDF Policy and Rules (PDF)](https://www.crea.ca/files/technology/english/DDFR-Policy-and-Rules-February-2024-ENG.pdf)
+- [DDF support forum](https://support.crea.ca/DDF)
+- Support: support@realtor.ca (English only)
+
+## Things an agent should know before calling anything
+
+- Every runtime call needs credentials CREA issues after a contractual process. Do not attempt
+  to sign up; there is no signup.
+- 20 of 21 documented operations are reads. The one write, `POST /v1/Lead/CreateLead`, sends an
+  email to a real REALTOR, has **no idempotency key**, and must be tested with
+  `?SuppressEmail=true`.
+- No rate limits, quotas or `429` responses are documented anywhere. Be conservative.
+- No webhooks, no events, no AsyncAPI. Change detection is polling the replication endpoints.
+- Displaying DDF content obliges you to render the "Powered by REALTOR.ca" badge and to beacon
+  View / Click / email_realtor events to `https://analytics.crea.ca/LogEvents.svc/LogEvents`.

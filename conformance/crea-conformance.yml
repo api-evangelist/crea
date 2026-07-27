@@ -1,0 +1,128 @@
+generated: '2026-07-26'
+method: searched
+source: >-
+  https://ddfapi-docs.realtor.ca/, https://boardapi-docs.realtor.ca/,
+  https://identity.crea.ca/.well-known/openid-configuration, RESO certification directory,
+  and the harvested OpenAPI documents
+description: >-
+  Which cross-cutting and industry standards the REALTOR.ca APIs actually conform to. The
+  headline finding is the gap between claim and certification: CREA describes the DDF Web API as
+  built on the RESO Web API specification and normalized to the RESO Data Dictionary, and the
+  payloads do carry RESO field names, but CREA does not appear in RESO's public certification
+  directory. It is RESO-aligned, not RESO-certified.
+standards:
+- id: oauth2
+  conforms: true
+  evidence: >-
+    Documented OAuth 2.0 client-credentials grant against https://identity.crea.ca/connect/token
+    with x-www-form-urlencoded client_id/client_secret/grant_type/scope and a Bearer token
+    valid 3600s. Confirmed by the anonymous OIDC discovery document.
+- id: oauth2-client-credentials
+  conforms: true
+  evidence: grant_types_supported includes client_credentials; it is the only grant documented for DDF and Board.
+- id: oidc-discovery
+  conforms: true
+  evidence: https://identity.crea.ca/.well-known/openid-configuration returns 200 with a complete IdentityServer discovery document (33 keys).
+- id: oidc-core
+  conforms: true
+  evidence: >-
+    issuer, authorization/token/userinfo/end_session/introspection/revocation endpoints, jwks_uri,
+    RS256 id_token signing, public subject types, claims_supported [sub, destinationid].
+- id: rfc7636-pkce
+  conforms: true
+  evidence: code_challenge_methods_supported [plain, S256].
+- id: rfc9126-par
+  conforms: true
+  evidence: pushed_authorization_request_endpoint present; require_pushed_authorization_requests false.
+- id: rfc8628-device-authorization
+  conforms: true
+  evidence: device_authorization_endpoint and urn:ietf:params:oauth:grant-type:device_code advertised.
+- id: openid-ciba
+  conforms: true
+  evidence: backchannel_authentication_endpoint and urn:openid:params:grant-type:ciba advertised.
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: false
+  evidence: /.well-known/oauth-authorization-server returns 404 on identity.crea.ca; only the OIDC document is served.
+- id: rfc9728-oauth-protected-resource-metadata
+  conforms: false
+  evidence: /.well-known/oauth-protected-resource returns 404 on identity.crea.ca and on both API hosts.
+- id: odata-v4
+  conforms: true
+  evidence: >-
+    /odata/v1 collections, $select/$filter/$top/$skip/$orderby/$count/$expand, the documented
+    operator set (eq ne gt lt ge le and or not in has), any()/contains() functions,
+    @odata.context and @odata.nextLink in responses, and a CSDL $metadata document.
+- id: reso-web-api
+  conforms: partial
+  evidence: >-
+    CREA states the DDF Web API "allows you to query MLS System data using the RESO Web API
+    specification, which is based on OData". The surface is OData v4 with RESO-named entities,
+    but CREA is not listed in RESO's public certification directory - the only Canadian entries
+    there are individual boards (e.g. Toronto Regional Real Estate Board, Greater Vancouver
+    REALTORS), none of them Certified Current.
+  certified: false
+- id: reso-data-dictionary
+  conforms: partial
+  evidence: >-
+    CREA states "MLS System data is normalized based on the RESO Data Dictionary standards" and
+    the schemas use Data Dictionary field names (ListingKey, ModificationTimestamp, ListAgentKey,
+    StandardStatus-style lookups, AboveGradeFinishedArea, LotSizeUnits). Release note 2024-06-18
+    explicitly realigns measurement lookups "to align with RESO standards". No Data Dictionary
+    version is declared and no certification exists.
+  certified: false
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    The Board API returns an RFC 7807-shaped ProblemDetails object (type/title/status/detail/
+    instance, plus traceId observed live) but serves it as application/json, not
+    application/problem+json. The DDF Web API uses an OData-style {error:{code,message,details}}
+    envelope instead.
+- id: rfc9116-security-txt
+  conforms: partial
+  evidence: >-
+    https://www.crea.ca/.well-known/security.txt returns 200 with Contact, Expiration, Encryption,
+    Policy and Acknowledgements fields. However the Policy, Acknowledgements and Encryption URLs
+    all 404, and the Expiration was the same day the file was harvested (2026-07-26T18:56:22-04:00).
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No Sunset or Deprecation header is documented or advertised; deprecations are prose-only in the release notes.
+- id: rfc9727-api-catalog
+  conforms: false
+  evidence: /.well-known/api-catalog returns 404 on every CREA and REALTOR.ca host probed.
+- id: openapi-3
+  conforms: true
+  evidence: OpenAPI 3.0.4 for the DDF Web API (17 operations, 157 schemas) and 3.0.1 for the Board API (4 operations, 5 schemas), both downloadable anonymously.
+- id: asyncapi
+  conforms: false
+  evidence: No event, streaming or webhook surface exists in either API; nothing to describe.
+- id: json-api
+  conforms: false
+- id: graphql
+  conforms: false
+- id: fhir-r4
+  conforms: false
+- id: fapi
+  conforms: false
+- id: scim2
+  conforms: false
+- id: tls-1-2-minimum
+  conforms: true
+  evidence: Release note 2023-01-31 enforces minimum TLS 1.2 and HTTPS-only; live probes negotiated TLS 1.3 on www.crea.ca, www.realtor.ca and ddfapi-docs.realtor.ca.
+compliance_program:
+  published: false
+  certifications: []
+  trust_center: null
+  note: >-
+    No SOC 2, ISO 27001, PCI DSS, HIPAA, FedRAMP or CSA STAR claim is published anywhere on
+    crea.ca or realtor.ca, and no trust centre exists (trust.crea.ca does not resolve). CREA is
+    subject to Canadian privacy law (PIPEDA) and publishes privacy policies, but it makes no
+    third-party audit or certification claim, so no Compliance pointer is asserted.
+regulatory_context:
+  jurisdiction: Canada
+  privacy_policy: https://www.crea.ca/privacy/
+  all_sites_privacy: https://www.crea.ca/privacy/all-crea-sites/
+  data_rules: https://www.crea.ca/files/technology/english/DDFR-Policy-and-Rules-February-2024-ENG.pdf
+  note: >-
+    The DDF Policy and Rules PDF is the binding instrument on data use - display obligations,
+    the mandatory "Powered by REALTOR.ca" badge, and what a Technology Provider may do with a
+    member's feed. It functions as CREA's compliance regime for API consumers.

@@ -1,0 +1,67 @@
+generated: '2026-07-26'
+method: searched
+source: npm registry search, PyPI, GitHub org probes and the DDF/Board API documentation, 2026-07-26
+description: >-
+  CREA ships no first-party client libraries for any REALTOR.ca API. There is no CREA or
+  REALTOR.ca GitHub organization (crea-ca, CREA-Canada, realtorca and
+  CanadianRealEstateAssociation all return HTTP 404 from the GitHub API), no package on PyPI
+  under realtor-ca-ddf / crea-ddf / ddf-api / realtorca, and the DDF Web API documentation
+  tells developers to "use any API client of your choice" and points at Postman for testing
+  rather than at an SDK. Everything below is community-built and unaffiliated with CREA.
+official_sdks: false
+official_sdk_count: 0
+packages:
+- language: typescript
+  registry: npm
+  name: crea-ddf
+  version: 0.0.6
+  url: https://www.npmjs.com/package/crea-ddf
+  install: npm install crea-ddf
+  license: MIT
+  official: false
+  author: Warya Wayne (@waryawayne)
+  repository: https://github.com/WaryaWayne/creaDDF
+  description: >-
+    Effect-native TypeScript SDK for the CREA DDF API with Postgres sync and frontend-ready
+    database queries. Wraps the OAuth 2.0 client-credentials handshake against
+    identity.crea.ca and the OData v4 collections on ddfapi.realtor.ca, then mirrors them into
+    a local Postgres schema (properties, members, offices, openHouses, destinations) via
+    Drizzle.
+  note: >-
+    Community package. The linked GitHub repository returned HTTP 404 on 2026-07-26 (private
+    or removed); only the published npm artifact could be verified.
+- language: typescript
+  registry: npm
+  name: crea-ddf-mcp
+  version: 0.0.4
+  url: https://www.npmjs.com/package/crea-ddf-mcp
+  install: npx -y crea-ddf-mcp
+  license: MIT
+  official: false
+  author: Warya Wayne (@waryawayne)
+  repository: https://github.com/WaryaWayne/crea-ddf-mcp
+  bin: crea-ddf-mcp
+  description: >-
+    Read-only stdio MCP server that queries the Postgres database synced by crea-ddf. It never
+    calls the CREA API directly and never handles CREA credentials; see mcp/crea-mcp.yml.
+  note: Community package; linked GitHub repository returned HTTP 404 on 2026-07-26.
+- language: python
+  registry: none
+  name: dlt REALTOR.ca DDF source
+  url: https://dlthub.com/context/source/realtor-ca-ddf
+  install: uv add "dlt[hub]"
+  official: false
+  author: dltHub
+  description: >-
+    dltHub publishes a generated REALTOR.ca DDF source for the dlt Python data-load framework
+    that handles the bearer-token auth and OData nextLink pagination. It is a dlt source
+    template rather than a standalone package on PyPI.
+not_found:
+  pypi: [realtor-ca-ddf, crea-ddf, ddf-api, realtorca]
+  github_orgs: [crea-ca, CREA-Canada, realtorca, CanadianRealEstateAssociation]
+  maven_central: []
+  nuget: []
+  rubygems: []
+  packagist: []
+  crates_io: []
+  go_modules: []

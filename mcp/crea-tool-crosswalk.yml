@@ -1,0 +1,219 @@
+generated: '2026-07-26'
+method: derived
+source: mcp/crea-mcp.yml, openapi/crea-realtor-ca-ddf-web-api-openapi.json, openapi/crea-realtor-ca-board-api-openapi.json
+description: >-
+  Binds every agent-facing tool in the CREA estate to the REST operation that actually backs
+  it. Two tool surfaces exist: the CANDIDATE server derived from the OpenAPI (mcp/crea-mcp.yml
+  tools[]), which is 1:1 with REST by construction, and the third-party crea-ddf-mcp server,
+  whose tools query a Postgres mirror of the DDF data rather than the live API — so its
+  bindings are semantic, not operational. Neither CREA OpenAPI declares operationId on any
+  operation except two OData replication paths, so operations are addressed here by
+  "<method> <path>", which is how they appear verbatim in the specs.
+surfaces:
+  openapi:
+  - file: openapi/crea-realtor-ca-ddf-web-api-openapi.json
+    version: 3.0.4
+    operations: 17
+    server: https://ddfapi.realtor.ca/odata/v1 (spec declares https://localhost:7051; see overlays/)
+    gated: true
+    note: Spec is anonymous; every operation requires an OAuth 2.0 client-credentials bearer token.
+  - file: openapi/crea-realtor-ca-board-api-openapi.json
+    version: 3.0.1
+    operations: 4
+    server: https://boardapi.realtor.ca/
+    gated: true
+  odata_metadata:
+    url: https://ddfapi.realtor.ca/odata/v1/$metadata
+    status: 401
+    note: The authoritative RESO-shaped CSDL contract is auth-gated and could not be introspected.
+  graphql: null
+  mcp:
+    provider_server: null
+    community_server: crea-ddf-mcp (stdio, npm, third-party)
+    tools_list_introspected: false
+    note: >-
+      crea-ddf-mcp runs locally over stdio against the operator's own Postgres, so there is no
+      hosted endpoint to POST tools/list to. Its tool names were read verbatim from the
+      published npm README on 2026-07-26.
+crosswalk:
+- tool: list_properties
+  category: listings
+  rest: ['get /odata/v1/Property']
+  binding: rest
+  confidence: high
+- tool: get_property
+  category: listings
+  rest: ['get /odata/v1/Property/{PropertyKey}']
+  binding: rest
+  confidence: high
+- tool: replicate_properties
+  category: sync
+  rest: ['get /odata/v1/Property/PropertyReplication()']
+  binding: rest
+  confidence: high
+- tool: replicate_properties_for_destination
+  category: sync
+  rest: ['get /odata/v1/Property/PropertyReplication(DestinationId={DestinationId})']
+  binding: rest
+  confidence: high
+- tool: list_members
+  category: roster
+  rest: ['get /odata/v1/Member']
+  binding: rest
+  confidence: high
+- tool: get_member
+  category: roster
+  rest: ['get /odata/v1/Member/{MemberKey}']
+  binding: rest
+  confidence: high
+- tool: replicate_members
+  category: sync
+  rest: ['get /odata/v1/Member/MemberReplication()']
+  binding: rest
+  confidence: high
+- tool: replicate_members_for_destination
+  category: sync
+  rest: ['get /odata/v1/Member/MemberReplication(DestinationId={DestinationId})']
+  binding: rest
+  confidence: high
+- tool: list_offices
+  category: roster
+  rest: ['get /odata/v1/Office']
+  binding: rest
+  confidence: high
+- tool: get_office
+  category: roster
+  rest: ['get /odata/v1/Office/{OfficeKey}']
+  binding: rest
+  confidence: high
+- tool: replicate_offices
+  category: sync
+  rest: ['get /odata/v1/Office/OfficeReplication()']
+  binding: rest
+  confidence: high
+- tool: replicate_offices_for_destination
+  category: sync
+  rest: ['get /odata/v1/Office/OfficeReplication(DestinationId={DestinationId})']
+  binding: rest
+  confidence: high
+- tool: list_open_houses
+  category: listings
+  rest: ['get /odata/v1/OpenHouse']
+  binding: rest
+  confidence: high
+- tool: get_open_house
+  category: listings
+  rest: ['get /odata/v1/OpenHouse/{OpenHouseKey}']
+  binding: rest
+  confidence: high
+- tool: list_destinations
+  category: feeds
+  rest: ['get /odata/v1/Destination']
+  binding: rest
+  confidence: high
+- tool: get_destination
+  category: feeds
+  rest: ['get /odata/v1/Destination/{DestinationKey}']
+  binding: rest
+  confidence: high
+- tool: create_lead
+  category: leads
+  rest: ['post /v1/Lead/CreateLead']
+  binding: rest
+  confidence: high
+  note: Only write operation in the estate. Request body is DDF.Core.Models.LeadModel; SuppressEmail query param suppresses delivery in test.
+- tool: list_board_members
+  category: board-roster
+  rest: ['get /Member']
+  binding: rest
+  confidence: high
+  note: Board API. Accept application/json is mandatory or the host answers 406.
+- tool: get_board_member
+  category: board-roster
+  rest: ['get /Member/{MemberNationalAssociationId}']
+  binding: rest
+  confidence: high
+- tool: list_board_offices
+  category: board-roster
+  rest: ['get /Office']
+  binding: rest
+  confidence: high
+- tool: get_board_office
+  category: board-roster
+  rest: ['get /Office/{OfficeNationalAssociationId}']
+  binding: rest
+  confidence: high
+third_party_crosswalk:
+  server: crea-ddf-mcp
+  binding: mirror
+  note: >-
+    These tools read a Postgres mirror populated by the crea-ddf sync, not the CREA API. The
+    rest[] column names the operation whose data ultimately populates the table being queried.
+  rows:
+  - tool: ddf_db_query_table
+    rest: ['get /odata/v1/Property', 'get /odata/v1/Member', 'get /odata/v1/Office', 'get /odata/v1/OpenHouse', 'get /odata/v1/Destination']
+    binding: mirror
+    confidence: medium
+    note: One structured query tool fans out over every synced table; the OData $filter/$select/$orderby surface is re-expressed as SQL-ish JSON input.
+  - tool: ddf_db_get_row
+    rest: ['get /odata/v1/Property/{PropertyKey}', 'get /odata/v1/Member/{MemberKey}', 'get /odata/v1/Office/{OfficeKey}', 'get /odata/v1/OpenHouse/{OpenHouseKey}', 'get /odata/v1/Destination/{DestinationKey}']
+    binding: mirror
+    confidence: medium
+  - tool: ddf_db_sample_table
+    rest: ['get /odata/v1/Property']
+    binding: mirror
+    confidence: low
+  - tool: ddf_db_list_tables
+    rest: []
+    binding: none
+    confidence: high
+    note: Local schema introspection; the CREA analogue would be the auth-gated OData $metadata document.
+  - tool: ddf_db_describe_table
+    rest: []
+    binding: none
+    confidence: high
+    note: Local schema introspection; analogue is $metadata (HTTP 401 anonymously).
+  - tool: ddf_db_table_fields
+    rest: []
+    binding: none
+    confidence: high
+  - tool: ddf_db_latest_sync_runs
+    rest: ['get /odata/v1/Property/PropertyReplication()', 'get /odata/v1/Member/MemberReplication()', 'get /odata/v1/Office/OfficeReplication()']
+    binding: mirror
+    confidence: medium
+    note: Reports on the sync driven by the replication endpoints rather than calling them.
+  - tool: ddf_runtime_status
+    rest: []
+    binding: none
+    confidence: high
+mcp_only:
+- tool: ddf_db_list_tables
+  reason: Schema discovery over the local mirror; CREA's equivalent ($metadata) is auth-gated and not exposed as an operation in either OpenAPI.
+- tool: ddf_db_describe_table
+  reason: Same as above.
+- tool: ddf_db_table_fields
+  reason: Same as above.
+- tool: ddf_runtime_status
+  reason: Server-side health of the community MCP process; no CREA counterpart.
+rest_only:
+- capability: lead delivery
+  operations: []
+  note: Fully covered by create_lead in the candidate surface; not covered by the community server, which is read-only.
+- capability: board roster
+  operations: ['get /Member', 'get /Member/{MemberNationalAssociationId}', 'get /Office', 'get /Office/{OfficeNationalAssociationId}']
+  note: The Board API has no MCP representation at all — the community server mirrors DDF only.
+- capability: analytics event logging
+  operations: []
+  note: >-
+    https://analytics.crea.ca/LogEvents.svc/LogEvents is documented in the DDF description with
+    full request arguments but is not modelled in any OpenAPI, so no tool can be bound to it.
+coverage:
+  candidate_tools_named: 21
+  candidate_tools_bound_to_rest: 21
+  community_tools_named: 8
+  community_tools_bound_to_rest: 4
+  mcp_only: 4
+  rest_operations_total: 21
+  rest_operations_with_a_candidate_tool: 21
+  rest_operations_with_a_community_tool: 10
+  undocumented_surfaces: 1

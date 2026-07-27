@@ -1,0 +1,43 @@
+generated: '2026-07-26'
+method: searched
+source: https://ddfapi-docs.realtor.ca/#section/DDF(r)-Web-API/Website-requirements
+description: >-
+  CREA ships no component library, no embeddable widgets and no hosted UI surfaces for DDF
+  consumers. What it does publish - and mandates - is a pair of attribution badge embeds that
+  every site displaying DDF listing content must render. They are plain anchor + img snippets
+  against SVGs hosted on realtor.ca, with no loader script and no JavaScript.
+component_library: false
+loaders: []
+families:
+- name: Powered by REALTOR.ca badge
+  type: static-embed
+  requirement: mandatory
+  requirement_source: >-
+    DDF Rules - all DDF Listing Content displayed on Real Estate Advertising Websites, Partner
+    Sites and Member Websites must include the badge, clickable and redirecting to the original
+    listing on REALTOR.ca. REALTORS managing their own website without a Technology Provider are
+    responsible for placing it on every listing.
+  components:
+  - name: Powered by REALTOR.ca (English)
+    asset: https://www.realtor.ca/images/en-ca/powered_by_realtor.svg
+    link: https://www.realtor.ca/en
+    recommended_width: 125
+    snippet: '<a href="https://www.realtor.ca/en" alt="Powered by: REALTOR.ca" target="_blank"><img width="125" src="https://www.realtor.ca/images/en-ca/powered_by_realtor.svg" /></a>'
+  - name: Alimente par REALTOR.ca (French)
+    asset: https://www.realtor.ca/images/fr-ca/powered_by_realtor.svg
+    link: https://www.realtor.ca/fr
+    recommended_width: 125
+    snippet: '<a href="https://www.realtor.ca/fr" alt="Alimente par: REALTOR.ca" target="_blank"><img width="125" src="https://www.realtor.ca/images/fr-ca/powered_by_realtor.svg" /></a>'
+related_client_obligations:
+- name: Analytics beacon
+  type: client-side-request
+  endpoint: https://analytics.crea.ca/LogEvents.svc/LogEvents
+  note: >-
+    Not a UI component, but the other client-side obligation CREA places on DDF consumers - fire
+    View / Click / email_realtor events per listing interaction. Captured in
+    conventions/crea-conventions.yml under telemetry_obligations.
+not_found:
+  web_components: none
+  js_element_library: none
+  hosted_checkout_or_embedded_dashboard: none
+  design_system: none

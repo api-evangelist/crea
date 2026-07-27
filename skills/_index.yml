@@ -1,0 +1,31 @@
+generated: '2026-07-26'
+method: generated
+source: openapi/crea-realtor-ca-ddf-web-api-openapi.json, openapi/crea-realtor-ca-board-api-openapi.json, https://ddfapi-docs.realtor.ca/, https://boardapi-docs.realtor.ca/
+description: >-
+  Packaged agent operating instructions for the REALTOR.ca APIs. CREA publishes no AGENTS.md,
+  no skills and no llms.txt, so these are generated from the harvested OpenAPI documents and
+  the provider's own narrative documentation. Neither CREA spec declares operationId on any
+  operation, so every step is grounded in the "<method> <path>" form exactly as it appears in
+  the specs; the parenthesised operationIds are the stable ids our overlays add (see
+  overlays/).
+skills:
+- file: crea-authenticate-and-query-listings.md
+  name: Authenticate and query REALTOR.ca DDF listings
+  api: openapi/crea-realtor-ca-ddf-web-api-openapi.json
+  operations: ['get /odata/v1/Property', 'get /odata/v1/Property/{PropertyKey}', 'get /odata/v1/Destination']
+- file: crea-replicate-ddf-feed.md
+  name: Replicate a DDF feed into your own database
+  api: openapi/crea-realtor-ca-ddf-web-api-openapi.json
+  operations: ['get /odata/v1/Property', 'get /odata/v1/Property/PropertyReplication()', 'get /odata/v1/Property/PropertyReplication(DestinationId={DestinationId})', 'get /odata/v1/Property/{PropertyKey}', 'get /odata/v1/Member/MemberReplication()', 'get /odata/v1/Office/OfficeReplication()']
+- file: crea-send-lead-to-realtor.md
+  name: Send a consumer lead to a REALTOR
+  api: openapi/crea-realtor-ca-ddf-web-api-openapi.json
+  operations: ['post /v1/Lead/CreateLead', 'get /odata/v1/Member/{MemberKey}']
+- file: crea-pull-board-roster.md
+  name: Pull a member board roster from the REALTOR.ca Board API
+  api: openapi/crea-realtor-ca-board-api-openapi.json
+  operations: ['get /Member', 'get /Member/{MemberNationalAssociationId}', 'get /Office', 'get /Office/{OfficeNationalAssociationId}']
+- file: crea-comply-with-ddf-display-rules.md
+  name: Comply with DDF display and analytics rules
+  api: openapi/crea-realtor-ca-ddf-web-api-openapi.json
+  operations: ['get /odata/v1/Property', 'get /odata/v1/Destination']

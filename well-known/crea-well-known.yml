@@ -1,0 +1,109 @@
+generated: '2026-07-26'
+method: searched
+source: live anonymous probes of every CREA / REALTOR.ca host in apis.yml, 2026-07-26
+description: >-
+  CREA publishes exactly two documents on the /.well-known/ surface: an RFC 9116 security.txt
+  on the corporate website (www.crea.ca) and a full OpenID Connect discovery document on the
+  identity server (identity.crea.ca) that fronts every REALTOR.ca API. Neither API host
+  (ddfapi.realtor.ca, boardapi.realtor.ca) serves a discovery surface of its own; boardapi
+  answers every /.well-known/ path with HTTP 406 because it requires an Accept header of
+  application/json on all requests. No api-catalog (RFC 9727) and no ai-plugin.json exist
+  anywhere in the estate.
+hosts:
+- host: https://identity.crea.ca
+  role: OAuth 2.0 / OpenID Connect authorization server for DDF Web API, Board API and Offer Management
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: crea-openid-configuration.json
+    note: >-
+      IdentityServer discovery document. Advertises scopes openid, DDFApi_Read,
+      OfferManagementApi.read.write, BoardDataApi.read, offline_access; grant types
+      authorization_code, client_credentials, refresh_token, implicit, device_code and CIBA;
+      PKCE S256; PAR endpoint present but not required.
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://www.crea.ca
+  role: CREA corporate website
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: crea-security.txt
+    note: >-
+      RFC 9116 file. Contact is tech@alphabetcreative.com (CREA's web agency, not a CREA
+      address); the advertised Policy page https://www.crea.ca/security-policy, the
+      Acknowledgements page https://www.crea.ca/hall-of-fame and the Encryption key
+      https://www.crea.ca/pgp-key.txt all returned HTTP 404 on 2026-07-26. Expiration was
+      2026-07-26T18:56:22-04:00, i.e. the file expires the day it was harvested.
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://ddfapi.realtor.ca
+  role: REALTOR.ca DDF Web API (OData v4) and DDF Lead API
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://boardapi.realtor.ca
+  role: REALTOR.ca Board API (roster distribution)
+  documents:
+  - path: /.well-known/security.txt
+    status: 406
+    note: Host rejects every request that does not carry Accept application/json; no /.well-known/ surface exists.
+  - path: /.well-known/openid-configuration
+    status: 406
+  - path: /.well-known/oauth-authorization-server
+    status: 406
+  - path: /.well-known/api-catalog
+    status: 406
+  - path: /.well-known/ai-plugin.json
+    status: 406
+- host: https://www.realtor.ca
+  role: REALTOR.ca national consumer listing portal
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+non_well_known_discovery:
+- url: https://ddfapi.realtor.ca/swagger/v1/swagger.json
+  status: 200
+  note: OpenAPI 3.0.4 served anonymously from the API host root; harvested to openapi/.
+- url: https://ddfapi.realtor.ca/api-docs
+  status: 200
+  note: Swagger UI shell for the DDF Web API.
+- url: https://ddfapi.realtor.ca/odata/v1/$metadata
+  status: 401
+  note: >-
+    The authoritative OData v4 / RESO CSDL contract. Returns 401 with WWW-Authenticate Bearer
+    to anonymous callers, so the RESO-shaped entity model could not be harvested.
+- url: https://boardapi.realtor.ca/swagger/v1/swagger.json
+  status: 404
+  note: >-
+    Returns an RFC 7807-shaped {"title":"Not Found","status":404,"detail":"Invalid endpoint"}
+    when called with Accept application/json; the Board API spec is only published inside the
+    Redoc page at boardapi-docs.realtor.ca (harvested to openapi/).
+- url: https://ddfapi-docs.realtor.ca/llms.txt
+  status: 404
+- url: https://boardapi-docs.realtor.ca/llms.txt
+  status: 404

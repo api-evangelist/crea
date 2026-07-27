@@ -1,0 +1,114 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for REALTOR.ca DDF Web API (swagger endpoint copy)
+  version: 1.0.0
+extends: openapi/crea-realtor-ca-ddf-web-api-swagger-endpoint-openapi.json
+x-generated: '2026-07-26'
+x-method: generated
+x-note: Same enhancements as the Redoc copy, applied to the spec served from the API host root. This copy
+  ships an empty info.description; the narrative documentation lives only in the Redoc copy.
+actions:
+- target: $.info
+  description: Stamp API Evangelist provenance on the harvested document.
+  update:
+    x-apievangelist-slug: crea
+    x-apievangelist-api: realtor-ca-ddf-web-api-swagger-endpoint
+    x-apievangelist-harvested: '2026-07-26'
+    x-apievangelist-source: https://ddfapi.realtor.ca/swagger/v1/swagger.json (HTTP 200 anonymous)
+- target: $.servers
+  description: Replace the leaked build-time server https://localhost:7051 with the production host.
+  update:
+  - url: https://ddfapi.realtor.ca
+    description: Production
+- target: $.components
+  description: Add the securitySchemes the provider documents in prose but never declares in the spec.
+  update:
+    securitySchemes:
+      CreaClientCredentials:
+        type: oauth2
+        description: CREA IdentityServer client credentials. client_id/client_secret are issued by CREA
+          against an active DDF data feed; no self-serve signup exists.
+        flows:
+          clientCredentials:
+            tokenUrl: https://identity.crea.ca/connect/token
+            scopes:
+              DDFApi_Read: Read access to the DDF Web API and the DDF Lead API
+- target: $
+  description: Apply the client-credentials requirement globally; every operation is gated.
+  update:
+    security:
+    - CreaClientCredentials:
+      - DDFApi_Read
+- target: $.paths['/odata/v1/Destination'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: listDestinations
+- target: $.paths['/odata/v1/Destination/{DestinationKey}'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: getDestination
+- target: $.paths['/v1/Lead/CreateLead'].post
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: createLead
+- target: $.paths['/odata/v1/Member'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: listMembers
+- target: $.paths['/odata/v1/Member/{MemberKey}'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: getMember
+- target: $.paths['/odata/v1/Member/MemberReplication()'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: replicateMembers
+- target: $.paths['/odata/v1/Member/MemberReplication(DestinationId={DestinationId})'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: replicateMembersForDestination
+- target: $.paths['/odata/v1/Office'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: listOffices
+- target: $.paths['/odata/v1/Office/{OfficeKey}'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: getOffice
+- target: $.paths['/odata/v1/Office/OfficeReplication()'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: replicateOffices
+- target: $.paths['/odata/v1/Office/OfficeReplication(DestinationId={DestinationId})'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: replicateOfficesForDestination
+- target: $.paths['/odata/v1/OpenHouse'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: listOpenHouses
+- target: $.paths['/odata/v1/OpenHouse/{OpenHouseKey}'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: getOpenHouse
+- target: $.paths['/odata/v1/Property'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: listProperties
+- target: $.paths['/odata/v1/Property/{PropertyKey}'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: getProperty
+- target: $.paths['/odata/v1/Property/PropertyReplication()'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: replicateProperties
+- target: $.paths['/odata/v1/Property/PropertyReplication(DestinationId={DestinationId})'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: replicatePropertiesForDestination
+- target: $.info
+  description: Point readers at the Redoc copy, which carries the 35KB narrative description this endpoint
+    copy drops.
+  update:
+    x-apievangelist-narrative-docs: https://ddfapi-docs.realtor.ca/

@@ -1,0 +1,59 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for REALTOR.ca Board API
+  version: 1.0.0
+extends: openapi/crea-realtor-ca-board-api-openapi.json
+x-generated: '2026-07-26'
+x-method: generated
+x-note: 'Non-destructive enhancements: documented-but-undeclared securitySchemes, stable operationIds,
+  and the mandatory Accept header the spec does not model.'
+actions:
+- target: $.info
+  description: Stamp API Evangelist provenance on the harvested document.
+  update:
+    x-apievangelist-slug: crea
+    x-apievangelist-api: realtor-ca-board-api
+    x-apievangelist-harvested: '2026-07-26'
+    x-apievangelist-source: https://boardapi-docs.realtor.ca/ (Redoc embedded document, HTTP 200 anonymous)
+- target: $.components
+  description: Add the securitySchemes the provider documents in prose but never declares in the spec.
+  update:
+    securitySchemes:
+      CreaClientCredentials:
+        type: oauth2
+        description: CREA IdentityServer client credentials. Credentials are provided by CREA to member
+          boards.
+        flows:
+          clientCredentials:
+            tokenUrl: https://identity.crea.ca/connect/token
+            scopes:
+              BoardDataApi.read: Read access to the Board API roster endpoints
+- target: $
+  description: Apply the client-credentials requirement globally; every operation is gated.
+  update:
+    security:
+    - CreaClientCredentials:
+      - BoardDataApi.read
+- target: $.paths['/Member'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: listBoardMembers
+- target: $.paths['/Member/{MemberNationalAssociationId}'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: getBoardMember
+- target: $.paths['/Office'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: listBoardOffices
+- target: $.paths['/Office/{OfficeNationalAssociationId}'].get
+  description: Add a stable, unique operationId (the source document declares none for this operation).
+  update:
+    operationId: getBoardOffice
+- target: $.info
+  description: Record the mandatory Accept header, which is the single most common Board API integration
+    failure and is not modelled anywhere in the spec.
+  update:
+    x-apievangelist-required-headers:
+      Accept: application/json - any other value returns HTTP 406 "Invalid Accept Header"
+    x-apievangelist-rate-limits: none published

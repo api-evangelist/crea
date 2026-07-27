@@ -1,0 +1,173 @@
+generated: '2026-07-26'
+method: searched
+source: https://ddfapi-docs.realtor.ca/, https://boardapi-docs.realtor.ca/
+description: >-
+  Cross-cutting request/response semantics for the REALTOR.ca APIs, harvested from the two
+  Redoc documentation sites and cross-checked against the harvested OpenAPI documents. The two
+  APIs do NOT share conventions: the DDF Web API is OData v4 with $-prefixed query options and
+  @odata.nextLink pagination, while the Board API is plain JSON with bare query parameters and
+  a pagination envelope. An integrator has to write two different clients.
+authentication:
+  style: oauth2-client-credentials-bearer
+  detail: See authentication/crea-authentication.yml
+  token_lifetime_seconds: 3600
+  sliding: false
+idempotency:
+  supported: false
+  note: >-
+    No idempotency contract exists and none is needed for 20 of the 21 operations, which are
+    GETs. The one write, POST /v1/Lead/CreateLead, documents no Idempotency-Key header and no
+    de-duplication guarantee; a retried lead post may deliver a second email to the REALTOR.
+    The only replay control CREA publishes is on the separate analytics beacon, where an
+    identical UUID + event inside a five-minute window is ignored.
+pagination:
+- api: crea:realtor-ca-ddf-web-api
+  style: odata-nextlink
+  default_page_size: 20
+  max_page_size: 100
+  params:
+    $top: Page size, maximum 100
+    $skip: Offset
+    $count: Returns the total record count; documented as expensive, request it once not per page
+  response_fields:
+    '@odata.context': Metadata URL for the collection
+    value: The array of records
+    '@odata.nextLink': Absolute URL of the next page, already carrying $top and $skip
+  gotchas:
+  - Order is not guaranteed unless you sort, and without a sort the same record can appear on more than one page.
+  - Beyond 10,000 listings you must switch to the dedicated Replication endpoints instead of paging.
+  - 'Prior to 2025-01-30 nextLink URLs did not URL-encode special characters in queries.'
+- api: crea:realtor-ca-board-api
+  style: offset-envelope
+  default_page_size: 100
+  max_page_size: 1000
+  params:
+    top: Page size, integer 1-1000
+    skip: Non-negative offset
+    count: Boolean; when true the total is returned in the pagination envelope
+  response_fields:
+    pagination: '{count, skip, top}'
+    data: The array of records
+query_language:
+  api: crea:realtor-ca-ddf-web-api
+  standard: OData v4
+  parameters: [$select, $filter, $top, $skip, $orderby, $count, $expand]
+  operators: [eq, ne, gt, lt, ge, le, and, or, not, in, has]
+  functions:
+  - name: any
+    note: "Works on Collection and complex types, e.g. $filter=Heating/any(a: a eq 'Electric')"
+  - name: contains
+    note: Substring match on string fields only; added 2025-08-01, lookup fields excluded
+  reference: http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html
+content_negotiation:
+  ddf: Responses are JSON except $metadata, which is XML (OData CSDL).
+  board: >-
+    Every request MUST send Accept application/json. Any other Accept value returns HTTP 406
+    "Invalid Accept Header" - this is why boardapi.realtor.ca answers 406 to plain browser and
+    /.well-known/ probes.
+timestamps:
+  timezone: UTC
+  note: >-
+    All timestamp fields on Property, Member, Office and Destination are returned in UTC (since
+    2023-08-17) and on the Replication collections (since 2023-09-22). UTC is also expected when
+    filtering on timestamp fields. ModificationTimestamp precision is 2.
+field_expansion:
+  supported: partial
+  note: >-
+    $expand is listed among the supported OData query options, but the practical model is that
+    complex children (Media, PropertyRoom/Rooms, SocialMedia) are already embedded in the
+    Property, Member and Office payloads rather than fetched separately.
+metadata:
+  url: https://ddfapi.realtor.ca/odata/v1/$metadata
+  format: OData CSDL XML
+  auth_required: true
+  status_anonymous: 401
+  contents: field name, type, nullability, description annotation and lookup values per resource
+  note: Lookup values must be re-pulled after any release that changes lookups (e.g. 2024-06-18).
+synchronization:
+  pattern: replication-then-detail
+  endpoints:
+  - /odata/v1/Property/PropertyReplication()
+  - /odata/v1/Member/MemberReplication()
+  - /odata/v1/Office/OfficeReplication()
+  detail: >-
+    The Replication collections return only the resource key plus ModificationTimestamp, sorted
+    by modification time. The documented client flow is: initial full pull from the resource
+    collection, then poll Replication with $filter=ModificationTimestamp gt <last run>, then
+    fetch changed records by key. Replication also serves as the master list for detecting
+    deletions, since it always returns the complete set of accessible records.
+  destination_scoping: >-
+    Each Replication collection has a DestinationId-parameterised form so a Technology Provider
+    with many linked feeds can replicate one feed at a time; the unified Technology Provider
+    account otherwise returns a merged, de-duplicated dataset.
+versioning:
+  scheme: uri-path
+  current: v1
+  paths: [/odata/v1, /v1]
+  spec_version: '1.0'
+  changelog: https://ddfapi-docs.realtor.ca/releasenotes
+  note: info.version has never changed; change is communicated by date on the release-notes page.
+error_envelope:
+  ddf:
+    shape: '{ error: { ... } }'
+    schemas: [DDF.Core.Models.CustomOdataError, DDF.Core.Models.Error]
+    fields: [code, message, details]
+    media_type: application/json
+  board:
+    shape: RFC 7807-style ProblemDetails
+    fields: [type, title, status, detail, instance]
+    media_type: application/json
+    note: >-
+      The schema is ASP.NET Core's ProblemDetails and the live 404 body observed on
+      boardapi.realtor.ca additionally carried a W3C traceId. It is served as application/json,
+      not application/problem+json, so it is problem-shaped rather than RFC 9457 conformant.
+  catalog: errors/crea-problem-types.yml
+rate_limiting:
+  documented: false
+  signalled: false
+  note: >-
+    No rate limits, quotas, concurrency caps, 429 responses or RateLimit headers are documented
+    anywhere in either API's documentation. The only published throttles are the page-size caps
+    ($top max 100 on DDF, top max 1000 on Board) and the advice that $count/count is expensive.
+request_tracing:
+  request_id_header: null
+  note: >-
+    No request-id or correlation header is documented. The Board API's error body does return a
+    W3C trace-context traceId (observed on a live 404), which is the only correlation handle.
+testing:
+  sandbox_environment: false
+  test_credentials: false
+  detail: >-
+    There is no sandbox, no test tenant and no test key prefix. CREA's published testing story
+    is: use Postman (or any client) against production with your issued credentials, and when
+    exercising the Lead endpoint set SuppressEmail=true so no email is delivered to the
+    REALTOR, e.g. https://ddfapi.realtor.ca/v1/Lead/CreateLead?SuppressEmail=true. An access
+    token is still required.
+  source: https://ddfapi-docs.realtor.ca/#section/DDF(r)-Web-API/Testing-Requests
+display_obligations:
+  requirement: mandatory
+  detail: >-
+    DDF Rules require every DDF listing displayed on a Real Estate Advertising Website, Partner
+    Site or Member Website to carry a clickable "Powered by REALTOR.ca" badge linking back to
+    the original listing on REALTOR.ca. Embed snippets are published for English and French.
+  components: components/crea-components.yml
+  policy: https://www.crea.ca/files/technology/english/DDFR-Policy-and-Rules-February-2024-ENG.pdf
+telemetry_obligations:
+  service: CREA Analytics Web Service
+  endpoint: https://analytics.crea.ca/LogEvents.svc/LogEvents
+  method: GET with query arguments; fire-and-forget, no response handling required
+  arguments:
+    required: [ListingID, DestinationID, EventType, UUID]
+    optional: [IP, ReferralURL, LanguageID]
+  event_types: [View, Click, email_realtor]
+  dedupe_window: 5 minutes per identical UUID + event
+  note: >-
+    Consuming sites are expected to beacon listing activity back to CREA so agents and
+    brokerages can see where their listings are being viewed. This endpoint is documented in
+    prose only - it appears in no OpenAPI document.
+related:
+  authentication: authentication/crea-authentication.yml
+  scopes: scopes/crea-scopes.yml
+  errors: errors/crea-problem-types.yml
+  lifecycle: lifecycle/crea-lifecycle.yml
+  changelog: changelog/crea-changelog.yml

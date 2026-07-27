@@ -1,0 +1,150 @@
+generated: '2026-07-26'
+method: searched
+source: >-
+  https://ddfapi-docs.realtor.ca/ (Error Codes table), https://boardapi-docs.realtor.ca/ (Error
+  Codes table), derived from openapi/crea-realtor-ca-ddf-web-api-openapi.json and
+  openapi/crea-realtor-ca-board-api-openapi.json responses
+description: >-
+  CREA publishes an error-code table for each API and both OpenAPI documents enumerate error
+  responses per operation. Neither API uses RFC 9457 application/problem+json. The DDF Web API
+  returns an OData-flavoured envelope ({error:{code,message,details}}); the Board API returns
+  ASP.NET Core ProblemDetails (type/title/status/detail/instance) served as application/json.
+  The docs list several statuses (403, 408, 415, 503) that appear in no OpenAPI response, and
+  the specs list none that the docs omit.
+format: vendor
+formats_by_api:
+  crea:realtor-ca-ddf-web-api:
+    envelope: '{ error: { code, message, details } }'
+    schemas: [DDF.Core.Models.CustomOdataError, DDF.Core.Models.Error]
+    media_type: application/json
+    rfc9457: false
+  crea:realtor-ca-board-api:
+    envelope: '{ type, title, status, detail, instance }'
+    schema: ProblemDetails
+    media_type: application/json
+    rfc9457: false
+    note: Problem-shaped but not served with the application/problem+json media type.
+problems:
+- status: 400
+  api: crea:realtor-ca-ddf-web-api
+  title: Bad Request
+  messages:
+  - Invalid Primary Key. The parameter value you have entered as a primary key is invalid.
+  - Empty or null values are not supported by the Select clause. Please specify a valid value and try again.
+  remediation: Check the key format and that every $select field is non-empty and valid for the resource.
+  in_spec: true
+  source_operations: all DDF operations
+- status: 401
+  api: crea:realtor-ca-ddf-web-api
+  title: Unauthorized access
+  messages:
+  - Invalid format or expired token or Invalid DestinationId.
+  - You are not authorized to perform this request.
+  remediation: >-
+    Request a fresh token from https://identity.crea.ca/connect/token with scope DDFApi_Read.
+    Tokens are not sliding and expire after 3600 seconds. An inactive data feed yields no token
+    at all. Anonymous callers to /odata/v1/$metadata also receive this with WWW-Authenticate Bearer.
+  in_spec: true
+  source_operations: all DDF operations
+- status: 403
+  api: crea:realtor-ca-ddf-web-api
+  title: Forbidden
+  messages: []
+  remediation: Documented in the Error Codes table with no message; not present in the OpenAPI.
+  in_spec: false
+- status: 404
+  api: crea:realtor-ca-ddf-web-api
+  title: Not found
+  messages:
+  - Invalid URL. The resource you are looking for is invalid.
+  - The {ResourceType} resource you are looking for does not exist.
+  remediation: Verify the collection name and the record key; keys are scoped to the Destinations your credential can see.
+  in_spec: true
+- status: 408
+  api: crea:realtor-ca-ddf-web-api
+  title: Request timeout
+  messages: []
+  remediation: Narrow the query with $filter/$select or page with $top; large $count queries are called out as expensive.
+  in_spec: false
+- status: 415
+  api: crea:realtor-ca-ddf-web-api
+  title: Unsupported MIME type
+  messages: []
+  in_spec: false
+- status: 500
+  api: crea:realtor-ca-ddf-web-api
+  title: Unexpected Internal server error
+  messages:
+  - An unexpected error was encountered. Please try again.
+  remediation: Retry; escalate to support@realtor.ca if persistent.
+  in_spec: true
+- status: 503
+  api: crea:realtor-ca-ddf-web-api
+  title: Service unavailable
+  messages: []
+  in_spec: false
+  note: No status page exists to correlate a 503 against.
+- status: 400
+  api: crea:realtor-ca-board-api
+  title: Bad request
+  messages:
+  - Only integer values between 1-1000 are allowed for top.
+  - Only non-negative integer values are allowed for skip.
+  - Only true or false is allowed for count.
+  remediation: Clamp top to 1-1000, skip to >= 0, count to a boolean.
+  in_spec: true
+  source_operations: ['get /Member', 'get /Member/{MemberNationalAssociationId}', 'get /Office', 'get /Office/{OfficeNationalAssociationId}']
+- status: 401
+  api: crea:realtor-ca-board-api
+  title: Unauthorized access
+  messages:
+  - Invalid or expired token.
+  remediation: Re-request a token with scope BoardDataApi.read.
+  in_spec: false
+  note: Documented in the Error Codes table but absent from every operation's responses in the OpenAPI.
+- status: 404
+  api: crea:realtor-ca-board-api
+  title: Not found
+  messages:
+  - Invalid Endpoint.
+  - Unable to access the requested Member.
+  - Unable to access the requested office.
+  remediation: >-
+    A 404 on a single record can mean either the record does not exist OR the authenticated
+    board lacks a data-sharing agreement covering it - the API deliberately does not
+    distinguish the two.
+  in_spec: true
+- status: 406
+  api: crea:realtor-ca-board-api
+  title: Not Acceptable
+  messages:
+  - Invalid Accept Header
+  remediation: Send Accept application/json on every request. This is the single most common Board API integration failure.
+  in_spec: true
+- status: 408
+  api: crea:realtor-ca-board-api
+  title: Request timeout
+  in_spec: false
+- status: 415
+  api: crea:realtor-ca-board-api
+  title: Unsupported MIME type
+  in_spec: false
+- status: 500
+  api: crea:realtor-ca-board-api
+  title: Unexpected Internal server error
+  in_spec: true
+- status: 503
+  api: crea:realtor-ca-board-api
+  title: Service unavailable
+  in_spec: false
+lead_api_response:
+  api: crea:realtor-ca-ddf-lead-api
+  schema: DDF.Core.Models.LeadResponse
+  fields: [success, code, message, details]
+  note: >-
+    The Lead endpoint returns its own success/failure envelope rather than relying on HTTP
+    status alone; treat success:false as an error even on a 200.
+gaps:
+- No 429 / rate-limit error is documented for either API, consistent with no published rate limits.
+- Neither API emits application/problem+json, so RFC 9457 tooling will not light up.
+- The DDF error envelope is documented only through the CustomOdataError schema; the docs' Error Codes table does not show a sample body.

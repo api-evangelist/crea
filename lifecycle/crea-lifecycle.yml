@@ -1,0 +1,86 @@
+generated: '2026-07-26'
+method: searched
+source: https://ddfapi-docs.realtor.ca/releasenotes, https://ddfapi-docs.realtor.ca/, https://boardapi-docs.realtor.ca/
+description: >-
+  CREA runs the REALTOR.ca APIs as long-lived v1 surfaces with a dated release-notes page as the
+  only lifecycle instrument. There is no published status page, no SLA, no deprecation policy
+  document, no Sunset/Deprecation header support and no versioning policy - but there is a real,
+  four-year, 24-entry release history that announces field deprecations with a named
+  replacement, which is more lifecycle discipline than most industry bodies publish.
+versioning:
+  scheme: uri-path
+  current: v1
+  paths: [/odata/v1, /v1]
+  spec_version: '1.0'
+  policy_url: null
+  note: >-
+    Both OpenAPI documents have carried info.version "1.0" since first publication. No v2 or
+    parallel version exists for either API, and no version negotiation header is documented.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  practice: >-
+    Deprecations are announced in the release notes with the replacement field named and an
+    explicit instruction to migrate, but no removal date, no deprecation window and no
+    machine-readable signal. Deprecated fields keep being returned.
+  announced_deprecations:
+  - item: Property.MapCoordinateVerifiedYN
+    announced: '2025-11-26'
+    replacement: Property.GeoCodeManualYN
+    removal_date: null
+    note: Added 2024-05-22, deprecated 18 months later.
+  - item: Obsolete and deprecated lookup values
+    announced: '2024-04-24'
+    replacement: Refreshed lookup data in $metadata
+    removal_date: '2024-04-24'
+  breaking_changes_announced:
+  - item: Property/Member/Office Media.MediaKey type change from bigint to string, plus a new composite format
+    announced: '2026-05-07'
+    impact: Any client storing MediaKey as a numeric column must migrate; a one-time reseed reissues every Member MediaKey.
+  - item: All timestamps moved to UTC
+    announced: '2023-08-17'
+    impact: Timestamp filters had to be rewritten in UTC.
+  - item: Minimum TLS 1.2 and HTTPS-only enforcement
+    announced: '2023-01-31'
+sla:
+  url: null
+  uptime_target: null
+  support_hours: null
+  note: >-
+    No SLA, uptime commitment or maintenance-window calendar is published for either API. The
+    DDF Policy and Rules PDF governs data use and display obligations, not availability.
+status_page: null
+status_page_probes:
+- url: https://status.realtor.ca/
+  status: DNS/connection failure
+- url: https://status.crea.ca/
+  status: DNS/connection failure
+- url: https://status.ddfapi.realtor.ca/
+  status: DNS/connection failure
+- url: https://www.crea.ca/status
+  status: 404
+support:
+  email: support@realtor.ca
+  language: English only ("At this time support is only offered in English.")
+  forum: https://support.crea.ca/DDF
+  forum_platform: https://crea.vanillacommunity.com/
+  source: https://ddfapi-docs.realtor.ca/#section/Support-and-Updates
+changelog: https://ddfapi-docs.realtor.ca/releasenotes
+changelog_artifact: changelog/crea-changelog.yml
+changelog_coverage:
+  first_entry: '2022-06-08'
+  latest_entry: '2026-05-07'
+  entries: 24
+  board_api: none published
+deprecated_operations: []
+deprecated_operations_note: >-
+  No operation in either OpenAPI document carries deprecated: true. CREA deprecates at the field
+  level, not the endpoint level.
+legacy_surfaces:
+- name: DDF RETS
+  status: referenced-as-legacy
+  evidence: >-
+    Release note 2023-11-23 aligns Web API data-processing timing "in line with our RETS
+    clients", confirming the older RETS feed was still live alongside the Web API.
+  spec: null

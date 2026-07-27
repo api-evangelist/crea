@@ -101,6 +101,12 @@ apis:
   - type: SupportForum
     url: https://support.crea.ca/DDF
     name: REALTOR.ca DDF community and support forum
+  - type: Overlay
+    url: overlays/crea-realtor-ca-ddf-web-api-overlay.yaml
+    name: API Evangelist Overlay 1.0.0 for the Redoc copy - production server, undeclared securitySchemes, stable operationIds
+  - type: Overlay
+    url: overlays/crea-realtor-ca-ddf-web-api-swagger-endpoint-overlay.yaml
+    name: API Evangelist Overlay 1.0.0 for the swagger-endpoint copy
 - aid: crea:realtor-ca-ddf-lead-api
   name: REALTOR.ca DDF Lead API
   description: >-
@@ -155,9 +161,93 @@ apis:
     name: REALTOR.ca Board API OpenAPI 3.0.1, extracted verbatim from the public Redoc documentation at boardapi-docs.realtor.ca (HTTP 200, anonymous, 2026-07-26)
   - type: Documentation
     url: https://boardapi-docs.realtor.ca/
+  - type: APIReference
+    url: https://boardapi-docs.realtor.ca/#tag/Member
+    name: REALTOR.ca Board API operation reference (Redoc)
   - type: Authentication
     url: openapi/crea-identity-openid-configuration.json
+  - type: Overlay
+    url: overlays/crea-realtor-ca-board-api-overlay.yaml
+    name: API Evangelist Overlay 1.0.0 - undeclared securitySchemes, stable operationIds, mandatory Accept header
 common:
+- type: AgenticAccess
+  url: agentic-access/crea-agentic-access.yml
+- type: VulnerabilityDisclosure
+  url: security/crea-vulnerability-disclosure.yml
+- type: Security
+  url: https://www.crea.ca/.well-known/security.txt
+  name: CREA security contact, RFC 9116 security.txt (the estate's only disclosure channel; the Policy page it advertises returns 404)
+- type: DomainSecurity
+  url: security/crea-domain-security.yml
+- type: WellKnown
+  url: well-known/crea-well-known.yml
+  name: Indexed /.well-known/ probe results across every CREA and REALTOR.ca host
+- type: SecurityTxt
+  url: well-known/crea-security.txt
+  name: Harvested copy of https://www.crea.ca/.well-known/security.txt (2026-07-26)
+- type: Authentication
+  url: authentication/crea-authentication.yml
+  name: OAuth 2.0 client-credentials profile for every REALTOR.ca API
+- type: OAuthScopes
+  url: scopes/crea-scopes.yml
+  name: Five scopes advertised by identity.crea.ca, two of them documented
+- type: Conventions
+  url: conventions/crea-conventions.yml
+  name: OData query surface, two pagination models, UTC timestamps, replication pattern, no idempotency, no published rate limits
+- type: ErrorCatalog
+  url: errors/crea-problem-types.yml
+  name: Both published error tables plus both response envelopes
+- type: Lifecycle
+  url: lifecycle/crea-lifecycle.yml
+  name: Versioning, deprecation practice, support and the absence of a status page or SLA
+- type: ChangeLog
+  url: changelog/crea-changelog.yml
+  name: 24 dated DDF Web API releases, 2022-06-08 to 2026-05-07
+- type: Conformance
+  url: conformance/crea-conformance.yml
+  name: OData v4, OAuth/OIDC and RESO alignment - RESO-aligned but not RESO-certified
+- type: DataModel
+  url: data-model/crea-data-model.yml
+  name: Entity graph derived from the OpenAPI schemas and key-reference fields
+- type: Packages
+  url: packages/crea-packages.yml
+  name: No first-party SDKs; two community npm packages and a dlt source
+- type: MCPServer
+  url: mcp/crea-mcp.yml
+  name: Candidate MCP tool surface derived from the OpenAPI, plus the third-party crea-ddf-mcp server
+- type: ToolCrosswalk
+  url: mcp/crea-tool-crosswalk.yml
+  name: Every agent tool bound to its backing REST operation
+- type: LLMsTxt
+  url: llms/crea-llms.txt
+  name: Generated llms.txt (CREA publishes none)
+- type: Components
+  url: components/crea-components.yml
+  name: Mandatory Powered by REALTOR.ca badge embeds
+- type: AgentSkill
+  url: skills/_index.yml
+  name: Five packaged agent skills for the REALTOR.ca APIs
+- type: AgentSkill
+  url: skills/crea-authenticate-and-query-listings.md
+  name: Authenticate and query REALTOR.ca DDF listings
+- type: AgentSkill
+  url: skills/crea-replicate-ddf-feed.md
+  name: Replicate a DDF feed into your own database
+- type: AgentSkill
+  url: skills/crea-send-lead-to-realtor.md
+  name: Send a consumer lead to a REALTOR
+- type: AgentSkill
+  url: skills/crea-pull-board-roster.md
+  name: Pull a member board roster from the REALTOR.ca Board API
+- type: AgentSkill
+  url: skills/crea-comply-with-ddf-display-rules.md
+  name: Comply with DDF display and analytics rules
+- type: DeveloperPortal
+  url: https://ddfapi-docs.realtor.ca/
+  name: The DDF Web API Redoc site is the entire developer surface; there is no separate portal
+- type: GettingStarted
+  url: https://ddfapi-docs.realtor.ca/#section/Quickstart-Overview
+  name: DDF Web API Quickstart Overview - prerequisites, get a token, first call, first OData query
 - type: Website
   url: https://www.crea.ca/
 - type: Website

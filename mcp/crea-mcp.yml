@@ -1,0 +1,127 @@
+generated: '2026-07-26'
+method: derived
+status: candidate
+source: openapi/crea-realtor-ca-ddf-web-api-openapi.json, openapi/crea-realtor-ca-board-api-openapi.json
+description: >-
+  CREA publishes no official MCP server for any REALTOR.ca API. Searches of the DDF and Board
+  API documentation, the MCP registries and npm turned up no CREA-operated hosted or stdio
+  server, and there is no CREA GitHub organization to host one. The tools[] below are a
+  CANDIDATE surface derived one-to-one from the operations in the two harvested OpenAPI
+  documents, so an agent-facing server could be stood up over the existing contract. One
+  community server does exist and is recorded separately under third_party[].
+server:
+  name: crea-realtor-ca
+  transport: http
+  url: null
+  status: not-published-by-provider
+auth:
+  model: oauth2-client-credentials
+  token_endpoint: https://identity.crea.ca/connect/token
+  scopes: [DDFApi_Read, BoardDataApi.read]
+  note: >-
+    Credentials are issued by CREA against an active DDF data feed or a member board. There is
+    no self-serve signup, so any MCP server over this API inherits a gated, per-tenant
+    credential model rather than a user-supplied API key.
+tools:
+- name: list_properties
+  description: List MLS System listings from the DDF Web API OData Property collection.
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/Property
+- name: get_property
+  description: Retrieve a single listing by PropertyKey (ListingKey).
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/Property/{PropertyKey}
+- name: replicate_properties
+  description: Retrieve the master list of ListingKey + ModificationTimestamp pairs for incremental sync.
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/Property/PropertyReplication()
+- name: replicate_properties_for_destination
+  description: Property replication list scoped to a single Destination (data feed).
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/Property/PropertyReplication(DestinationId={DestinationId})
+- name: list_members
+  description: List REALTOR (agent) roster records from the DDF Web API Member collection.
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/Member
+- name: get_member
+  description: Retrieve a single REALTOR by MemberKey.
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/Member/{MemberKey}
+- name: replicate_members
+  description: Retrieve the master list of MemberKey + ModificationTimestamp pairs.
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/Member/MemberReplication()
+- name: replicate_members_for_destination
+  description: Member replication list scoped to a single Destination.
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/Member/MemberReplication(DestinationId={DestinationId})
+- name: list_offices
+  description: List brokerage office roster records from the DDF Web API Office collection.
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/Office
+- name: get_office
+  description: Retrieve a single office by OfficeKey.
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/Office/{OfficeKey}
+- name: replicate_offices
+  description: Retrieve the master list of OfficeKey + ModificationTimestamp pairs.
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/Office/OfficeReplication()
+- name: replicate_offices_for_destination
+  description: Office replication list scoped to a single Destination.
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/Office/OfficeReplication(DestinationId={DestinationId})
+- name: list_open_houses
+  description: List current and future open house events tied to listings.
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/OpenHouse
+- name: get_open_house
+  description: Retrieve a single open house event by OpenHouseKey.
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/OpenHouse/{OpenHouseKey}
+- name: list_destinations
+  description: List the DDF data feeds (Destinations) the calling credential can see.
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/Destination
+- name: get_destination
+  description: Retrieve a single Destination (data feed) by DestinationKey.
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/Destination/{DestinationKey}
+- name: create_lead
+  description: >-
+    Send a consumer enquiry to the listing REALTOR. This is the only write operation in the
+    entire CREA API estate; set SuppressEmail=true when testing so no email reaches the agent.
+  source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#post /v1/Lead/CreateLead
+  write: true
+- name: list_board_members
+  description: List member roster records from the Board API (requires Accept application/json).
+  source_operation: openapi/crea-realtor-ca-board-api-openapi.json#get /Member
+- name: get_board_member
+  description: Retrieve a single board member by MemberNationalAssociationId.
+  source_operation: openapi/crea-realtor-ca-board-api-openapi.json#get /Member/{MemberNationalAssociationId}
+- name: list_board_offices
+  description: List office roster records from the Board API.
+  source_operation: openapi/crea-realtor-ca-board-api-openapi.json#get /Office
+- name: get_board_office
+  description: Retrieve a single board office by OfficeNationalAssociationId.
+  source_operation: openapi/crea-realtor-ca-board-api-openapi.json#get /Office/{OfficeNationalAssociationId}
+third_party:
+- name: crea-ddf-mcp
+  status: published
+  official: false
+  transport: stdio
+  registry: https://www.npmjs.com/package/crea-ddf-mcp
+  version: 0.0.4
+  author: Warya Wayne (@waryawayne)
+  license: MIT
+  description: >-
+    Read-only MCP server that queries a Postgres database previously synced from the DDF Web
+    API by the crea-ddf package. It deliberately does not call CREA endpoints and never sees
+    CREA credentials, so its tools are database tools over a DDF mirror rather than API tools.
+  tools:
+  - ddf_runtime_status
+  - ddf_db_list_tables
+  - ddf_db_describe_table
+  - ddf_db_table_fields
+  - ddf_db_query_table
+  - ddf_db_get_row
+  - ddf_db_sample_table
+  - ddf_db_latest_sync_runs
+  resources:
+  - crea-ddf://capabilities
+  - crea-ddf://db/schema
+  tables: [properties, members, offices, openHouses, destinations, watermarks, syncRuns, syncErrors]
+  source: https://registry.npmjs.org/crea-ddf-mcp (README, 2026-07-26)
+notes:
+- >-
+  The DDF Web API is OData v4, so a faithful MCP server should expose $select/$filter/$top/
+  $skip/$orderby as structured tool inputs rather than one tool per canned query; the
+  community server reaches the same end by syncing to Postgres and exposing a structured
+  query tool.
+- >-
+  Every tool above is read-only except create_lead. See agentic-access/crea-agentic-access.yml
+  for the recommended per-operation execution contract.

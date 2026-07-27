@@ -1,0 +1,225 @@
+generated: '2026-07-26'
+method: derived
+source: openapi/crea-realtor-ca-ddf-web-api-openapi.json, openapi/crea-realtor-ca-board-api-openapi.json
+docs: https://ddfapi-docs.realtor.ca/#section/DDF(r)-Web-API/Resources
+description: >-
+  Entity-relationship graph for the REALTOR.ca data core, derived from the $ref links and the
+  *Key / *Id reference fields in the two harvested OpenAPI documents and cross-checked against
+  CREA's Resources table. The graph is RESO-shaped: Property, Member and Office are the three
+  root resources, OpenHouse hangs off Property, Destination is the tenancy object (a DDF data
+  feed), and Media / PropertyRoom / SocialMedia are polymorphic children addressed by
+  ResourceName + ResourceRecordKey. The authoritative contract is the OData $metadata CSDL
+  document, which is auth-gated (HTTP 401 anonymously), so this graph is derived from the
+  OpenAPI projection rather than from CSDL.
+key_convention:
+  pattern: '<Resource>Key'
+  examples: [ListingKey, MemberKey, OfficeKey, OpenHouseKey, RoomKey, MediaKey, SocialMediaKey, DestinationId]
+  note: >-
+    Property's own key is ListingKey (the Property collection path parameter is named
+    PropertyKey but the payload field is ListingKey). A parallel national identifier space
+    exists - MemberNationalAssociationId, OfficeNationalAssociationId,
+    FranchiseNationalAssociationId - and it is the ONLY key space the Board API uses.
+    MediaKey changed from a bigint to the composite string <ObjectID>_<MediaCategoryId>_<MediaPosition>
+    on 2026-05-07.
+entities:
+- name: Property
+  schema: DDF.Core.Entities.Property
+  fields: 144
+  key: ListingKey
+  collection: /odata/v1/Property
+  description: A real estate listing - MLS System number, price, geography, structure, media and rooms.
+  relationships:
+  - type: belongs_to
+    target: Member
+    via: ListAgentKey
+    note: Also CoListAgentKey, CoListAgentKey2, CoListAgentKey3.
+  - type: belongs_to
+    target: Office
+    via: ListOfficeKey
+    note: Also CoListOfficeKey, CoListOfficeKey2, CoListOfficeKey3.
+  - type: belongs_to
+    target: Board
+    via: ListAORKey
+    note: ListAOR/ListAORKey identify the board or association in charge of the listing; there is no Board resource to dereference against in the DDF API.
+  - type: has_many
+    target: Media
+    via: embedded Media collection
+  - type: has_many
+    target: PropertyRoom
+    via: embedded Rooms collection
+  - type: has_many
+    target: OpenHouse
+    via: OpenHouse.ListingKey
+  - type: has_one
+    target: PropertyIdentifier
+    via: ListingKey
+    note: The replication projection.
+  national_id_fields: [ListAgentNationalAssociationId, CoListAgentNationalAssociationId, CoListAgentNationalAssociationId2, CoListAgentNationalAssociationId3, ListOfficeNationalAssociationId, CoListOfficeNationalAssociationId, CoListOfficeNationalAssociationId2, CoListOfficeNationalAssociationId3]
+  timestamps: [OriginalEntryTimestamp, ModificationTimestamp, StatusChangeTimestamp, PhotosChangeTimestamp]
+- name: Member
+  schema: DDF.Core.Entities.Member
+  fields: 34
+  key: MemberKey
+  collection: /odata/v1/Member
+  description: A REALTOR - the agent/broker roster record.
+  relationships:
+  - type: belongs_to
+    target: Office
+    via: OfficeKey
+  - type: belongs_to
+    target: Board
+    via: MemberAORKey
+  - type: has_many
+    target: Media
+    via: embedded Media collection
+  - type: has_many
+    target: SocialMedia
+    via: embedded MemberSocialMedia collection
+  - type: has_many
+    target: Destination
+    via: Destination.MemberKey
+  - type: has_one
+    target: MemberIdentifier
+    via: MemberKey
+  alternate_key: MemberNationalAssociationId
+  notable_fields:
+  - name: MemberEmailYN
+    note: Signals whether the REALTOR has an email address; Lead API clients must hide the Email REALTOR button when false. Email addresses themselves are never returned.
+- name: Office
+  schema: DDF.Core.Entities.Office
+  fields: 23
+  key: OfficeKey
+  collection: /odata/v1/Office
+  description: A brokerage office roster record.
+  relationships:
+  - type: has_many
+    target: Member
+    via: Member.OfficeKey
+  - type: belongs_to
+    target: Board
+    via: OfficeAORKey
+  - type: belongs_to
+    target: Franchise
+    via: FranchiseNationalAssociationId
+  - type: belongs_to
+    target: Member
+    via: OfficeBrokerNationalAssociationId
+    note: The managing broker, expressed in the national-id space.
+  - type: has_many
+    target: Media
+    via: embedded Media collection
+  - type: has_many
+    target: SocialMedia
+    via: embedded OfficeSocialMedia collection
+  - type: has_one
+    target: OfficeIdentifier
+    via: OfficeKey
+  alternate_key: OfficeNationalAssociationId
+- name: OpenHouse
+  schema: DDF.Core.Entities.OpenHouse
+  fields: 10
+  key: OpenHouseKey
+  collection: /odata/v1/OpenHouse
+  description: An open-house event. Only current and future events are returned (since 2024-05-22).
+  relationships:
+  - type: belongs_to
+    target: Property
+    via: ListingKey
+    note: ListingId is the human-facing MLS number for the same listing.
+- name: Destination
+  schema: DDF.Core.Entities.Destination
+  fields: 11
+  key: DestinationId
+  collection: /odata/v1/Destination
+  description: >-
+    A DDF data feed - the tenancy object. DestinationType/DestinationStatus describe the feed,
+    DestinationUrl the consuming website, FullNSP whether it is a Full National Shared Pool feed.
+  relationships:
+  - type: belongs_to
+    target: Member
+    via: MemberKey
+    note: The REALTOR who opted the feed in via the DDF Dashboard.
+  note: The destinationid OIDC claim binds an issued token to this entity; it is also the DestinationId parameter on every Replication collection and on the analytics beacon.
+- name: Media
+  schema: DDF.Core.Entities.Media
+  fields: 10
+  key: MediaKey
+  description: Polymorphic photo/media child of Property, Member and Office.
+  relationships:
+  - type: belongs_to
+    target: polymorphic
+    via: ResourceName + ResourceRecordKey
+    note: ResourceRecordId carries the human-facing id, ResourceRecordKey the system key.
+  notable_fields: [MediaURL, MediaCategory, Order, PreferredPhotoYN, LongDescription, ModificationTimestamp]
+- name: PropertyRoom
+  schema: DDF.Core.Entities.PropertyRoom
+  fields: 11
+  key: RoomKey
+  description: Room detail child of Property.
+  relationships:
+  - type: belongs_to
+    target: Property
+    via: ListingKey
+- name: SocialMedia
+  schema: DDF.Core.Entities.SocialMedia
+  fields: 6
+  key: SocialMediaKey
+  description: Polymorphic social handle child of Member and Office.
+  relationships:
+  - type: belongs_to
+    target: polymorphic
+    via: ResourceName + ResourceRecordKey
+- name: PropertyIdentifier
+  schema: DDF.Core.Entities.PropertyIdentifier
+  fields: 2
+  description: Replication projection - ListingKey + ModificationTimestamp only.
+  collection: /odata/v1/Property/PropertyReplication()
+- name: MemberIdentifier
+  schema: DDF.Core.Entities.MemberIdentifier
+  fields: 2
+  collection: /odata/v1/Member/MemberReplication()
+- name: OfficeIdentifier
+  schema: DDF.Core.Entities.OfficeIdentifier
+  fields: 2
+  collection: /odata/v1/Office/OfficeReplication()
+- name: LeadModel
+  schema: DDF.Core.Models.LeadModel
+  fields: 9
+  description: The only write payload in the estate - a consumer enquiry routed to a REALTOR.
+  relationships:
+  - type: belongs_to
+    target: Member
+    via: MemberKey
+  - type: belongs_to
+    target: Property
+    via: ListingKey
+  notable_fields: [Culture, SenderName, SenderEmailAddress, SenderPhoneNumber, SenderPhoneExtension, PreferredMethodContact, Message]
+- name: Board
+  schema: null
+  description: >-
+    A board or association of REALTORS. It is referenced everywhere (ListAORKey, MemberAORKey,
+    OfficeAORKey, ListAOR, OfficeAOR, MemberAOR) but has no resource of its own in either API -
+    boards are the tenants of the Board API rather than an addressable entity in it.
+  synthetic: true
+board_api_projection:
+  description: >-
+    The Board API exposes a narrower Member and Office pair keyed exclusively on the national
+    identifier space, with its own smaller schemas (Member, Office, Media, SocialMedia,
+    ProblemDetails) - it is a separate projection of the same roster core, not the same objects.
+  entities:
+  - name: Member
+    key: MemberNationalAssociationId
+    filters: [memberAORKey, modificationTimestamp, memberStatus]
+    collection: /Member
+  - name: Office
+    key: OfficeNationalAssociationId
+    filters: [officeAORKey, modificationTimestamp, officeStatus]
+    collection: /Office
+authoritative_contract:
+  url: https://ddfapi.realtor.ca/odata/v1/$metadata
+  format: OData CSDL XML
+  status_anonymous: 401
+  note: >-
+    $metadata carries field types, nullability, description annotations and the full lookup
+    value sets (including MediaCategoryId). It is the only place the enumerations live, and it
+    cannot be read without CREA-issued credentials.
