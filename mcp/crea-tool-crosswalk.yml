@@ -24,7 +24,8 @@ surfaces:
     gated: true
   odata_metadata:
     url: https://ddfapi.realtor.ca/odata/v1/$metadata
-    status: 401
+    status: gated
+    status_raw: gated
     note: The authoritative RESO-shaped CSDL contract is auth-gated and could not be introspected.
   graphql: null
   mcp:
