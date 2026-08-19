@@ -2,13 +2,12 @@ generated: '2026-07-26'
 method: derived
 status: candidate
 source: openapi/crea-realtor-ca-ddf-web-api-openapi.json, openapi/crea-realtor-ca-board-api-openapi.json
-description: >-
-  CREA publishes no official MCP server for any REALTOR.ca API. Searches of the DDF and Board
-  API documentation, the MCP registries and npm turned up no CREA-operated hosted or stdio
-  server, and there is no CREA GitHub organization to host one. The tools[] below are a
-  CANDIDATE surface derived one-to-one from the operations in the two harvested OpenAPI
-  documents, so an agent-facing server could be stood up over the existing contract. One
-  community server does exist and is recorded separately under third_party[].
+description: CREA publishes no official MCP server for any REALTOR.ca API. Searches of the DDF and Board
+  API documentation, the MCP registries and npm turned up no CREA-operated hosted or stdio server, and
+  there is no CREA GitHub organization to host one. The tools[] below are a CANDIDATE surface derived
+  one-to-one from the operations in the two harvested OpenAPI documents, so an agent-facing server could
+  be stood up over the existing contract. One community server does exist and is recorded separately under
+  third_party[].
 server:
   name: crea-realtor-ca
   transport: http
@@ -17,11 +16,12 @@ server:
 auth:
   model: oauth2-client-credentials
   token_endpoint: https://identity.crea.ca/connect/token
-  scopes: [DDFApi_Read, BoardDataApi.read]
-  note: >-
-    Credentials are issued by CREA against an active DDF data feed or a member board. There is
-    no self-serve signup, so any MCP server over this API inherits a gated, per-tenant
-    credential model rather than a user-supplied API key.
+  scopes:
+  - DDFApi_Read
+  - BoardDataApi.read
+  note: Credentials are issued by CREA against an active DDF data feed or a member board. There is no
+    self-serve signup, so any MCP server over this API inherits a gated, per-tenant credential model rather
+    than a user-supplied API key.
 tools:
 - name: list_properties
   description: List MLS System listings from the DDF Web API OData Property collection.
@@ -72,8 +72,7 @@ tools:
   description: Retrieve a single Destination (data feed) by DestinationKey.
   source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#get /odata/v1/Destination/{DestinationKey}
 - name: create_lead
-  description: >-
-    Send a consumer enquiry to the listing REALTOR. This is the only write operation in the
+  description: Send a consumer enquiry to the listing REALTOR. This is the only write operation in the
     entire CREA API estate; set SuppressEmail=true when testing so no email reaches the agent.
   source_operation: openapi/crea-realtor-ca-ddf-web-api-openapi.json#post /v1/Lead/CreateLead
   write: true
@@ -98,10 +97,9 @@ third_party:
   version: 0.0.4
   author: Warya Wayne (@waryawayne)
   license: MIT
-  description: >-
-    Read-only MCP server that queries a Postgres database previously synced from the DDF Web
-    API by the crea-ddf package. It deliberately does not call CREA endpoints and never sees
-    CREA credentials, so its tools are database tools over a DDF mirror rather than API tools.
+  description: Read-only MCP server that queries a Postgres database previously synced from the DDF Web
+    API by the crea-ddf package. It deliberately does not call CREA endpoints and never sees CREA credentials,
+    so its tools are database tools over a DDF mirror rather than API tools.
   tools:
   - ddf_runtime_status
   - ddf_db_list_tables
@@ -114,14 +112,25 @@ third_party:
   resources:
   - crea-ddf://capabilities
   - crea-ddf://db/schema
-  tables: [properties, members, offices, openHouses, destinations, watermarks, syncRuns, syncErrors]
+  tables:
+  - properties
+  - members
+  - offices
+  - openHouses
+  - destinations
+  - watermarks
+  - syncRuns
+  - syncErrors
   source: https://registry.npmjs.org/crea-ddf-mcp (README, 2026-07-26)
 notes:
-- >-
-  The DDF Web API is OData v4, so a faithful MCP server should expose $select/$filter/$top/
-  $skip/$orderby as structured tool inputs rather than one tool per canned query; the
-  community server reaches the same end by syncing to Postgres and exposing a structured
-  query tool.
-- >-
-  Every tool above is read-only except create_lead. See agentic-access/crea-agentic-access.yml
-  for the recommended per-operation execution contract.
+- The DDF Web API is OData v4, so a faithful MCP server should expose $select/$filter/$top/ $skip/$orderby
+  as structured tool inputs rather than one tool per canned query; the community server reaches the same
+  end by syncing to Postgres and exposing a structured query tool.
+- Every tool above is read-only except create_lead. See agentic-access/crea-agentic-access.yml for the
+  recommended per-operation execution contract.
+deployment:
+  mode: none
+  verified: derived
+  tools: 21
+  checked: '2026-08-12'
+  source: catalog MCP census

@@ -1,0 +1,161 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "REALTOR.ca Board API Documentation"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Member",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of members",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://boardapi.realtor.ca/Member",
+            "params": [
+              {
+                "name": "skip",
+                "value": "",
+                "type": "query",
+                "description": "Skips this number of results. Default: 0"
+              },
+              {
+                "name": "top",
+                "value": "",
+                "type": "query",
+                "description": "Request the server start at other than the first record in the set of matching records. Default: 0"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Request the server to apply a limit on the number of records returned. Default: 100. Maximum of 1000 records enforced."
+              },
+              {
+                "name": "memberAORKey",
+                "value": "",
+                "type": "query",
+                "description": "A system unique identifier. This is the Board ID of the Member's Primary Board or Association of REALTORS."
+              },
+              {
+                "name": "modificationTimestamp",
+                "value": "",
+                "type": "query",
+                "description": "Date/time the member record was last modified."
+              },
+              {
+                "name": "memberStatus",
+                "value": "",
+                "type": "query",
+                "description": "The current status of the member."
+              }
+            ]
+          },
+          "docs": "Get a list of members"
+        },
+        {
+          "info": {
+            "name": "Get a single member by the MemberNationalAssociationId",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://boardapi.realtor.ca/Member/:MemberNationalAssociationId",
+            "params": [
+              {
+                "name": "memberNationalAssociationId",
+                "value": "",
+                "type": "path",
+                "description": "The national association ID of the member i.e. CREA Id of the member."
+              }
+            ]
+          },
+          "docs": "Get a single member by the MemberNationalAssociationId"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Office",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of offices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://boardapi.realtor.ca/Office",
+            "params": [
+              {
+                "name": "skip",
+                "value": "",
+                "type": "query",
+                "description": "Skips this number of results. Default: 0"
+              },
+              {
+                "name": "top",
+                "value": "",
+                "type": "query",
+                "description": "Request the server start at other than the first record in the set of matching records. Default: 0"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Request the server to apply a limit on the number of records returned. Default: 100. Maximum of 1000 records enforced."
+              },
+              {
+                "name": "officeAORKey",
+                "value": "",
+                "type": "query",
+                "description": "A system unique identifier. This is the Board ID of the Office's Primary Board or Association of REALTORS."
+              },
+              {
+                "name": "modificationTimestamp",
+                "value": "",
+                "type": "query",
+                "description": "Date/time the office record was last modified"
+              },
+              {
+                "name": "officeStatus",
+                "value": "",
+                "type": "query",
+                "description": "Is the office active, inactive or under disciplinary action."
+              }
+            ]
+          },
+          "docs": "Get a list of offices"
+        },
+        {
+          "info": {
+            "name": "Get a single office by the OfficeNationalAssociationId",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://boardapi.realtor.ca/Office/:OfficeNationalAssociationId",
+            "params": [
+              {
+                "name": "officeNationalAssociationId",
+                "value": "",
+                "type": "path",
+                "description": "The national association ID of the office. i.e. In Canada, this is the Organization ID of the Office."
+              }
+            ]
+          },
+          "docs": "Get a single office by the OfficeNationalAssociationId"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
