@@ -57,130 +57,185 @@ created: '2026-07-26'
 modified: '2026-07-26'
 specificationVersion: '0.23'
 apis:
-- aid: crea:realtor-ca-ddf-web-api
-  name: REALTOR.ca DDF Web API
-  description: >-
-    The REALTOR.ca DDF (Data Distribution Facility) Web API is CREA's national listing
-    syndication API. CREA documents it as a platform that "allows you to query MLS System
-    data using the RESO Web API specification, which is based on OData" and states that
-    "MLS System data is normalized based on the RESO Data Dictionary standards". It exposes
-    OData v4 collections for Property, Member, Office, OpenHouse and Destination, each with
-    a key-addressed single-record form, plus Replication endpoints (PropertyReplication,
-    MemberReplication, OfficeReplication) sorted by modification timestamp for periodic
-    synchronization. Standard OData query options ($select, $filter, $top, $skip, $expand)
-    are supported. Authentication is OAuth 2.0 client credentials against
-    https://identity.crea.ca/connect/token with scope DDFApi_Read, returning a Bearer token
-    valid for 60 minutes; credentials are issued by CREA against an active DDF data feed and
-    an inactive feed yields no token. The OData $metadata document at
-    https://ddfapi.realtor.ca/odata/v1/$metadata is the authoritative RESO-shaped contract
-    but returned HTTP 401 (WWW-Authenticate: Bearer) to an anonymous probe on 2026-07-26 and
-    could not be harvested. The OpenAPI document, by contrast, is served anonymously.
+- aid: crea:crea-destination-api
+  name: CREA (REALTOR.ca) Destination API
+  description: Get details about each destination linked to the Technology Provider
   humanURL: https://ddfapi-docs.realtor.ca/
   baseURL: https://ddfapi.realtor.ca/odata/v1
   tags:
-  - Property Listings
-  - MLS
-  - RESO
-  - OData
-  - Syndication
-  - Canada
+  - Destination
   properties:
   - type: OpenAPI
-    url: openapi/crea-realtor-ca-ddf-web-api-openapi.json
-    name: REALTOR.ca DDF Web API OpenAPI 3.0.4, extracted verbatim from the public Redoc documentation at ddfapi-docs.realtor.ca (HTTP 200, anonymous, 2026-07-26)
-  - type: OpenAPI
-    url: openapi/crea-realtor-ca-ddf-web-api-swagger-endpoint-openapi.json
-    name: REALTOR.ca DDF Web API OpenAPI 3.0.4 as served from https://ddfapi.realtor.ca/swagger/v1/swagger.json (HTTP 200, anonymous, 2026-07-26)
+    url: openapi/crea-destination-api-openapi.yml
   - type: Documentation
     url: https://ddfapi-docs.realtor.ca/
   - type: APIReference
     url: https://ddfapi.realtor.ca/api-docs
-  - type: OpenAPI
-    url: https://ddfapi.realtor.ca/swagger/v1/swagger.json
-    name: Live OpenAPI JSON endpoint (HTTP 200, anonymous)
   - type: ChangeLog
     url: https://ddfapi-docs.realtor.ca/releasenotes
   - type: Authentication
     url: openapi/crea-identity-openid-configuration.json
-    name: OpenID Connect discovery document for identity.crea.ca (HTTP 200, anonymous)
   - type: Documentation
     url: https://www.crea.ca/technology/realtor-ca-for-realtors/realtor-ca-tools/realtor-ca-ddf/
-    name: CREA product page for REALTOR.ca DDF
   - type: TermsOfService
     url: https://www.crea.ca/files/technology/english/DDFR-Policy-and-Rules-February-2024-ENG.pdf
-    name: REALTOR.ca DDF Policy and Rules, January 2024 (HTTP 200, anonymous PDF)
   - type: SupportForum
     url: https://support.crea.ca/DDF
-    name: REALTOR.ca DDF community and support forum
-  - type: Overlay
-    url: overlays/crea-realtor-ca-ddf-web-api-overlay.yaml
-    name: API Evangelist Overlay 1.0.0 for the Redoc copy - production server, undeclared securitySchemes, stable operationIds
-  - type: Overlay
-    url: overlays/crea-realtor-ca-ddf-web-api-swagger-endpoint-overlay.yaml
-    name: API Evangelist Overlay 1.0.0 for the swagger-endpoint copy
-- aid: crea:realtor-ca-ddf-lead-api
-  name: REALTOR.ca DDF Lead API
-  description: >-
-    The DDF Lead API is a single documented POST endpoint, /v1/Lead/CreateLead, on the same
-    ddfapi.realtor.ca host as the DDF Web API. CREA requires it because REALTOR email
-    addresses are deliberately excluded from the DDF Web API payload - "Real Estate
-    Advertising Websites (REAW) are required to use the DDF lead API, as email addresses are
-    not included in the DDF Web API". A syndicating site presents an "Email REALTOR" form to
-    a consumer and posts the resulting lead through this endpoint rather than emailing the
-    agent directly. It is described in the same public OpenAPI document as the rest of DDF
-    and carries the same OAuth 2.0 client-credentials gate.
-  humanURL: https://ddfapi-docs.realtor.ca/
-  baseURL: https://ddfapi.realtor.ca
-  tags:
-  - Leads
-  - Property Listings
-  - Canada
-  properties:
-  - type: OpenAPI
-    url: openapi/crea-realtor-ca-ddf-web-api-openapi.json
-    name: Lead endpoint is defined as POST /v1/Lead/CreateLead in the DDF Web API OpenAPI document
-  - type: Documentation
-    url: https://ddfapi-docs.realtor.ca/
-  - type: Authentication
-    url: openapi/crea-identity-openid-configuration.json
-- aid: crea:realtor-ca-board-api
-  name: REALTOR.ca Board API
-  description: >-
-    The REALTOR.ca Board API is a separate, smaller roster-distribution API for CREA's member
-    boards and associations rather than for listing consumers. CREA describes it as "a data
-    distribution API that allows Boards to access Members and Offices roster information
-    built on modern industry standards" and states that "Board Data API is normalized based
-    on the RESO Data Dictionary standards". Boards can enter data-sharing agreements with
-    other boards to pull roster information for consenting partner boards. It exposes four
-    documented operations - GET /Member, GET /Member/{MemberNationalAssociationId},
-    GET /Office and GET /Office/{OfficeNationalAssociationId} - and is plain JSON rather than
-    OData; every request must carry an Accept header of application/json or the service
-    answers HTTP 406 "Invalid Accept Header". Authentication is OAuth 2.0 client credentials
-    at https://identity.crea.ca/connect/token with scope BoardDataApi.read. Credentials are
-    provided by CREA to boards; there is no self-serve path.
-  humanURL: https://boardapi-docs.realtor.ca/
-  baseURL: https://boardapi.realtor.ca/
-  tags:
-  - Roster
-  - Agents
-  - Brokerages
-  - RESO
-  - Canada
-  properties:
-  - type: OpenAPI
-    url: openapi/crea-realtor-ca-board-api-openapi.json
-    name: REALTOR.ca Board API OpenAPI 3.0.1, extracted verbatim from the public Redoc documentation at boardapi-docs.realtor.ca (HTTP 200, anonymous, 2026-07-26)
   - type: Documentation
     url: https://boardapi-docs.realtor.ca/
   - type: APIReference
     url: https://boardapi-docs.realtor.ca/#tag/Member
-    name: REALTOR.ca Board API operation reference (Redoc)
+- aid: crea:crea-lead-api
+  name: CREA (REALTOR.ca) Lead API
+  description: Create Lead
+  humanURL: https://ddfapi-docs.realtor.ca/
+  baseURL: https://ddfapi.realtor.ca/odata/v1
+  tags:
+  - Lead
+  properties:
+  - type: OpenAPI
+    url: openapi/crea-lead-api-openapi.yml
+  - type: Documentation
+    url: https://ddfapi-docs.realtor.ca/
+  - type: APIReference
+    url: https://ddfapi.realtor.ca/api-docs
+  - type: ChangeLog
+    url: https://ddfapi-docs.realtor.ca/releasenotes
   - type: Authentication
     url: openapi/crea-identity-openid-configuration.json
-  - type: Overlay
-    url: overlays/crea-realtor-ca-board-api-overlay.yaml
-    name: API Evangelist Overlay 1.0.0 - undeclared securitySchemes, stable operationIds, mandatory Accept header
+  - type: Documentation
+    url: https://www.crea.ca/technology/realtor-ca-for-realtors/realtor-ca-tools/realtor-ca-ddf/
+  - type: TermsOfService
+    url: https://www.crea.ca/files/technology/english/DDFR-Policy-and-Rules-February-2024-ENG.pdf
+  - type: SupportForum
+    url: https://support.crea.ca/DDF
+  - type: Documentation
+    url: https://boardapi-docs.realtor.ca/
+  - type: APIReference
+    url: https://boardapi-docs.realtor.ca/#tag/Member
+- aid: crea:crea-member-api
+  name: CREA (REALTOR.ca) Member API
+  description: >-
+    This transaction is used to retrieve Member list for the specific board. Boards can access Member
+    information of other Boards based on permissions granted.
+  humanURL: https://ddfapi-docs.realtor.ca/
+  baseURL: https://ddfapi.realtor.ca/odata/v1
+  tags:
+  - Member
+  properties:
+  - type: OpenAPI
+    url: openapi/crea-member-api-openapi.yml
+  - type: Documentation
+    url: https://ddfapi-docs.realtor.ca/
+  - type: APIReference
+    url: https://ddfapi.realtor.ca/api-docs
+  - type: ChangeLog
+    url: https://ddfapi-docs.realtor.ca/releasenotes
+  - type: Authentication
+    url: openapi/crea-identity-openid-configuration.json
+  - type: Documentation
+    url: https://www.crea.ca/technology/realtor-ca-for-realtors/realtor-ca-tools/realtor-ca-ddf/
+  - type: TermsOfService
+    url: https://www.crea.ca/files/technology/english/DDFR-Policy-and-Rules-February-2024-ENG.pdf
+  - type: SupportForum
+    url: https://support.crea.ca/DDF
+  - type: Documentation
+    url: https://boardapi-docs.realtor.ca/
+  - type: APIReference
+    url: https://boardapi-docs.realtor.ca/#tag/Member
+- aid: crea:crea-office-api
+  name: CREA (REALTOR.ca) Office API
+  description: >-
+    This transaction is used to retrieve Office details for the specific board. Boards can access Office
+    information of other Boards based on permissions granted.
+  humanURL: https://ddfapi-docs.realtor.ca/
+  baseURL: https://ddfapi.realtor.ca/odata/v1
+  tags:
+  - Office
+  properties:
+  - type: OpenAPI
+    url: openapi/crea-office-api-openapi.yml
+  - type: Documentation
+    url: https://ddfapi-docs.realtor.ca/
+  - type: APIReference
+    url: https://ddfapi.realtor.ca/api-docs
+  - type: ChangeLog
+    url: https://ddfapi-docs.realtor.ca/releasenotes
+  - type: Authentication
+    url: openapi/crea-identity-openid-configuration.json
+  - type: Documentation
+    url: https://www.crea.ca/technology/realtor-ca-for-realtors/realtor-ca-tools/realtor-ca-ddf/
+  - type: TermsOfService
+    url: https://www.crea.ca/files/technology/english/DDFR-Policy-and-Rules-February-2024-ENG.pdf
+  - type: SupportForum
+    url: https://support.crea.ca/DDF
+  - type: Documentation
+    url: https://boardapi-docs.realtor.ca/
+  - type: APIReference
+    url: https://boardapi-docs.realtor.ca/#tag/Member
+- aid: crea:crea-openhouse-api
+  name: CREA (REALTOR.ca) Open House API
+  description: The OpenHouse API from CREA (REALTOR.ca) — 2 operation(s) for openhouse.
+  humanURL: https://ddfapi-docs.realtor.ca/
+  baseURL: https://ddfapi.realtor.ca/odata/v1
+  tags:
+  - OpenHouse
+  properties:
+  - type: OpenAPI
+    url: openapi/crea-openhouse-api-openapi.yml
+  - type: Documentation
+    url: https://ddfapi-docs.realtor.ca/
+  - type: APIReference
+    url: https://ddfapi.realtor.ca/api-docs
+  - type: ChangeLog
+    url: https://ddfapi-docs.realtor.ca/releasenotes
+  - type: Authentication
+    url: openapi/crea-identity-openid-configuration.json
+  - type: Documentation
+    url: https://www.crea.ca/technology/realtor-ca-for-realtors/realtor-ca-tools/realtor-ca-ddf/
+  - type: TermsOfService
+    url: https://www.crea.ca/files/technology/english/DDFR-Policy-and-Rules-February-2024-ENG.pdf
+  - type: SupportForum
+    url: https://support.crea.ca/DDF
+  - type: Documentation
+    url: https://boardapi-docs.realtor.ca/
+  - type: APIReference
+    url: https://boardapi-docs.realtor.ca/#tag/Member
+- aid: crea:crea-property-api
+  name: CREA (REALTOR.ca) Property API
+  description: Get Properties
+  humanURL: https://ddfapi-docs.realtor.ca/
+  baseURL: https://ddfapi.realtor.ca/odata/v1
+  tags:
+  - Property
+  properties:
+  - type: OpenAPI
+    url: openapi/crea-property-api-openapi.yml
+  - type: Documentation
+    url: https://ddfapi-docs.realtor.ca/
+  - type: APIReference
+    url: https://ddfapi.realtor.ca/api-docs
+  - type: ChangeLog
+    url: https://ddfapi-docs.realtor.ca/releasenotes
+  - type: Authentication
+    url: openapi/crea-identity-openid-configuration.json
+  - type: Documentation
+    url: https://www.crea.ca/technology/realtor-ca-for-realtors/realtor-ca-tools/realtor-ca-ddf/
+  - type: TermsOfService
+    url: https://www.crea.ca/files/technology/english/DDFR-Policy-and-Rules-February-2024-ENG.pdf
+  - type: SupportForum
+    url: https://support.crea.ca/DDF
+  - type: Documentation
+    url: https://boardapi-docs.realtor.ca/
+  - type: APIReference
+    url: https://boardapi-docs.realtor.ca/#tag/Member
 common:
+- type: Overlay
+  url: overlays/crea-realtor-ca-ddf-web-api-overlay.yaml
+- type: Overlay
+  url: overlays/crea-realtor-ca-ddf-web-api-swagger-endpoint-overlay.yaml
+- type: Overlay
+  url: overlays/crea-realtor-ca-board-api-overlay.yaml
 - type: AgenticAccess
   url: agentic-access/crea-agentic-access.yml
 - type: VulnerabilityDisclosure
