@@ -242,6 +242,9 @@ apis:
   - type: APIReference
     url: https://boardapi-docs.realtor.ca/#tag/Member
 common:
+- type: CapabilityMap
+  url: capabilities/crea-capability-edges.yml
+  name: CREA (REALTOR.ca) Business Capability Map
 - type: Overlay
   url: overlays/crea-realtor-ca-ddf-web-api-overlay.yaml
 - type: Overlay
