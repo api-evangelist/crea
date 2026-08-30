@@ -2,23 +2,45 @@
 kin_checks:
   slug: crea
   schema_version: 0.15.1
-  scored_at: '2026-08-27'
-  run_ts: 2026-08-27T140727
+  scored_at: '2026-08-28'
+  run_ts: 2026-08-28T221322
   note: Actionable checks only (missed + partial). earned/na are every other check
     in rubric/scoring-0.15.1.yml; counts below let you verify that.
   counts:
     total: 130
-    earned: 33
-    partial: 7
-    missed: 48
-    na: 42
+    earned: 43
+    partial: 9
+    missed: 54
+    na: 24
   checks:
   - id: llms_txt_published
     status: missed
   - id: apis_json_self_hosted
     status: missed
-  - id: examples_present
+  - id: openapi_3_2
     status: missed
+    detail: 0 of 6 openapi documents pass
+  - id: openapi_3_1
+    status: missed
+    detail: 0 of 6 openapi documents pass
+  - id: servers_defined
+    status: missed
+    detail: 0 of 6 openapi documents pass
+  - id: operations_description_coverage
+    status: missed
+    detail: 0 of 6 openapi documents pass
+  - id: operations_operation_ids
+    status: missed
+    detail: 0 of 6 openapi documents pass
+  - id: security_schemes_defined
+    status: missed
+    detail: 0 of 6 openapi documents pass
+  - id: security_applied
+    status: missed
+    detail: 0 of 6 openapi documents pass
+  - id: webhooks_or_callbacks
+    status: missed
+    detail: 0 of 6 openapi documents pass
   - id: asyncapi_present
     status: missed
   - id: json_schema_present
@@ -90,8 +112,6 @@ kin_checks:
     status: missed
   - id: idempotency
     status: missed
-  - id: openapi_examples
-    status: missed
   - id: rate_limit_signal
     status: missed
   - id: event_surface_described
@@ -113,6 +133,13 @@ kin_checks:
   - id: servers_resolvable
     status: partial
     earned: 1.67
+  - id: examples_present
+    status: partial
+    earned: 0.67
+  - id: components_reuse
+    status: partial
+    earned: 2.5
+    detail: 5 of 6 openapi documents pass
   - id: agent_skill_present
     status: partial
     earned: 0.75
@@ -128,10 +155,10 @@ kin_checks:
     status: partial
     earned: 9.0
     detail: 'grade: served'
-  - id: error_semantics
+  - id: openapi_examples
     status: partial
-    earned: 4.0
-    detail: 'grade: documented'
+    earned: 3.5
+    detail: 'grade: partial'
   - id: agent_skills
     status: partial
     earned: 1.25
