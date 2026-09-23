@@ -1,14 +1,18 @@
 openapi: 3.2.0
 info:
-  title: Crea Lead API
-  version: '1.0'
+  title: REALTOR.ca DDF® Web API Documentation Lead API
+  description: 'The REALTOR.ca Data Distribution Facility (DDF®) allows REALTORS® across Canada to access listing content
+
+    on personal websites, franchisor websites, real estate advertising websites and partner sites based on
+
+    permissions set by their brokerage owner.'
   contact:
     name: Realtor Support
     email: support@realtor.ca
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  description: 'Operations tagged Lead across 2 of this provider''s published API definitions: crea-realtor-ca-ddf-web-api-openapi.json, crea-realtor-ca-ddf-web-api-swagger-endpoint-openapi.json. Each path carries the servers of the definition it was published in.'
+  version: '1.0'
 servers:
 - url: https://localhost:7051
 tags:
@@ -65,28 +69,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DDF.Core.Models.LeadResponse'
-    servers:
-    - url: https://localhost:7051
+      operationId: postV1LeadCreateLead
+      x-operation-id-source: derived
 components:
   schemas:
-    DDF.Core.Models.LeadResponse:
-      type: object
-      properties:
-        details:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-        success:
-          type: boolean
-      additionalProperties: false
     DDF.Core.Models.LeadModel:
       required:
       - Culture
@@ -141,15 +127,39 @@ components:
           description: The leads message to the member. This field has a 500 character limit.
           example: Message
       additionalProperties: false
-x-refined-from:
-- crea-realtor-ca-ddf-web-api-openapi.json
-- crea-realtor-ca-ddf-web-api-swagger-endpoint-openapi.json
+    DDF.Core.Models.LeadResponse:
+      type: object
+      properties:
+        details:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        success:
+          type: boolean
+      additionalProperties: false
 x-tagGroups:
-- name: Operations
+- name: API Endpoints
   tags:
+  - Media
   - Member
   - Office
+  - OpenHouse
+  - Property
+  - Destination
+  - Lead
 - name: Models
   tags:
+  - media_model
   - member_model
   - office_model
+  - openhouse_model
+  - property_model
+  - destination_model

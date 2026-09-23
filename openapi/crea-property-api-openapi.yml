@@ -1,14 +1,18 @@
 openapi: 3.2.0
 info:
-  title: Crea Property API
-  version: '1.0'
+  title: REALTOR.ca DDF® Web API Documentation Property API
+  description: 'The REALTOR.ca Data Distribution Facility (DDF®) allows REALTORS® across Canada to access listing content
+
+    on personal websites, franchisor websites, real estate advertising websites and partner sites based on
+
+    permissions set by their brokerage owner.'
   contact:
     name: Realtor Support
     email: support@realtor.ca
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  description: 'Operations tagged Property across 2 of this provider''s published API definitions: crea-realtor-ca-ddf-web-api-openapi.json, crea-realtor-ca-ddf-web-api-swagger-endpoint-openapi.json. Each path carries the servers of the definition it was published in.'
+  version: '1.0'
 servers:
 - url: https://localhost:7051
 tags:
@@ -83,8 +87,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DDF.Core.Models.CustomOdataError'
-    servers:
-    - url: https://localhost:7051
+      operationId: getOdataV1Property
+      x-operation-id-source: derived
   /odata/v1/Property/{PropertyKey}:
     get:
       tags:
@@ -97,16 +101,16 @@ paths:
         The function-style follows OData conventions and may be required in certain query contexts (e.g., when the key contains special characters or is not a simple numeric ID).
 
 
-        <b>Path-style access: </b>```/odata/v1/Property/{PropertyKey}```
+        Path-style access: ```/odata/v1/Property/{PropertyKey}```
 
 
-        <b>Example: </b>```/odata/v1/Property/123456789```
+        Example: ```/odata/v1/Property/123456789```
 
 
-        <b>Function-style access: </b>```/odata/v1/Property(''{PropertyKey}'')```
+        Function-style access: ```/odata/v1/Property(''{PropertyKey}'')```
 
 
-        <b>Example: </b>```/odata/v1/Property(''123456789'')```'
+        Example: ```/odata/v1/Property(''123456789'')```'
       parameters:
       - name: PropertyKey
         in: path
@@ -150,8 +154,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DDF.Core.Models.CustomOdataError'
-    servers:
-    - url: https://localhost:7051
+      operationId: getOdataV1PropertyByPropertyKey
+      x-operation-id-source: derived
   /odata/v1/Property/PropertyReplication():
     get:
       tags:
@@ -164,13 +168,10 @@ paths:
         The function-style follows OData conventions.
 
 
-        <b>Path-style access: </b>```/odata/v1/Property/PropertyReplication```
+        Path-style access: ```/odata/v1/Property/PropertyReplication```
 
 
-        <b>Function-style access: </b>```/odata/v1/Property/PropertyReplication()```
-
-
-        '
+        Function-style access: ```/odata/v1/Property/PropertyReplication()```'
       parameters:
       - name: $select
         in: query
@@ -223,8 +224,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DDF.Core.Models.CustomOdataError'
-    servers:
-    - url: https://localhost:7051
+      operationId: getOdataV1PropertyPropertyReplication()
+      x-operation-id-source: derived
   /odata/v1/Property/PropertyReplication(DestinationId={DestinationId}):
     get:
       tags:
@@ -290,42 +291,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DDF.Core.Models.CustomOdataError'
-    servers:
-    - url: https://localhost:7051
 components:
   schemas:
-    ? DDF.Infrastructure.Swagger.ExampleModels.ODataReplicationListResponse_2__DDF.Core.Entities.PropertyIdentifier__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null___DDF.Core.Entities.Property__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null
-    : type: object
-      properties:
-        '@odata.context':
-          type:
-          - string
-          - 'null'
-          example: https://localhost:7051/odata/v1/$metadata#DDF.Core.Entities.Property
-        value:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DDF.Core.Entities.PropertyIdentifier'
-      additionalProperties: false
-    DDF.Core.Entities.PropertyIdentifier:
-      type: object
-      properties:
-        ListingKey:
-          type:
-          - string
-          - 'null'
-          description: A unique identifier for this record from the immediate source.
-          example: '12345'
-        ModificationTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time the record was last updated in the source system (in Zulu time (UTC)).
-          format: date-time
-          example: '"2021-01-01T12:00:00.000Z"'
-      additionalProperties: false
     DDF.Core.Entities.PropertyRoom:
       type: object
       properties:
@@ -400,6 +367,23 @@ components:
           format: 'Enum: RoomType'
           example: Living room
       additionalProperties: false
+    DDF.Core.Entities.PropertyIdentifier:
+      type: object
+      properties:
+        ListingKey:
+          type:
+          - string
+          - 'null'
+          description: A unique identifier for this record from the immediate source.
+          example: '12345'
+        ModificationTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time the record was last updated in the source system (in Zulu time (UTC)).
+          format: date-time
+          example: '"2021-01-01T12:00:00.000Z"'
+      additionalProperties: false
     DDF.Core.Entities.Media:
       type: object
       properties:
@@ -467,28 +451,6 @@ components:
           description: Category describing the , Photos, Documents, Video, Unbranded Virtual Tour, Branded Virtual Tour, Floor Plan, Logo
           format: 'Enum: MediaCategory'
           example: Photo
-      additionalProperties: false
-    DDF.Core.Models.Error:
-      type: object
-      properties:
-        details:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    DDF.Core.Models.CustomOdataError:
-      type: object
-      properties:
-        error:
-          $ref: '#/components/schemas/DDF.Core.Models.Error'
       additionalProperties: false
     ? DDF.Infrastructure.Swagger.ExampleModels.ODataSingleResponse_1__DDF.Core.Entities.Property__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null
     : type: object
@@ -1586,6 +1548,63 @@ components:
             $ref: '#/components/schemas/DDF.Core.Entities.Media'
           description: A collection of the types of media fields available for this Property.
       additionalProperties: false
+    ? DDF.Infrastructure.Swagger.ExampleModels.ODataReplicationListResponse_2__DDF.Core.Entities.PropertyIdentifier__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null___DDF.Core.Entities.Property__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null
+    : type: object
+      properties:
+        '@odata.context':
+          type:
+          - string
+          - 'null'
+          example: https://localhost:7051/odata/v1/$metadata#DDF.Core.Entities.Property
+        value:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DDF.Core.Entities.PropertyIdentifier'
+      additionalProperties: false
+    DDF.Core.Models.CustomOdataError:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/DDF.Core.Models.Error'
+      additionalProperties: false
+    DDF.Core.Models.Error:
+      type: object
+      properties:
+        details:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ? DDF.Infrastructure.Swagger.ExampleModels.ODataListResponse_1__DDF.Core.Entities.Property__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null
+    : type: object
+      properties:
+        '@odata.context':
+          type:
+          - string
+          - 'null'
+          example: https://localhost:7051/odata/v1/$metadata#DDF.Core.Entities.Property
+        value:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DDF.Core.Entities.Property'
+        '@odata.nextLink':
+          type:
+          - string
+          - 'null'
+          example: https://localhost:7051/odata/v1/DDF.Core.Entities.Property?skip=1
+      additionalProperties: false
     DDF.Core.Entities.Property:
       type: object
       properties:
@@ -2677,35 +2696,21 @@ components:
             $ref: '#/components/schemas/DDF.Core.Entities.Media'
           description: A collection of the types of media fields available for this Property.
       additionalProperties: false
-    ? DDF.Infrastructure.Swagger.ExampleModels.ODataListResponse_1__DDF.Core.Entities.Property__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null
-    : type: object
-      properties:
-        '@odata.context':
-          type:
-          - string
-          - 'null'
-          example: https://localhost:7051/odata/v1/$metadata#DDF.Core.Entities.Property
-        value:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DDF.Core.Entities.Property'
-        '@odata.nextLink':
-          type:
-          - string
-          - 'null'
-          example: https://localhost:7051/odata/v1/DDF.Core.Entities.Property?skip=1
-      additionalProperties: false
-x-refined-from:
-- crea-realtor-ca-ddf-web-api-openapi.json
-- crea-realtor-ca-ddf-web-api-swagger-endpoint-openapi.json
 x-tagGroups:
-- name: Operations
+- name: API Endpoints
   tags:
+  - Media
   - Member
   - Office
+  - OpenHouse
+  - Property
+  - Destination
+  - Lead
 - name: Models
   tags:
+  - media_model
   - member_model
   - office_model
+  - openhouse_model
+  - property_model
+  - destination_model

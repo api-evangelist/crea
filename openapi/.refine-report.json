@@ -1,0 +1,39 @@
+{
+  "provider": "crea",
+  "sources": [
+    "_original/crea-realtor-ca-board-api-openapi.json",
+    "_original/crea-realtor-ca-ddf-web-api-openapi.json"
+  ],
+  "outputs": [
+    "crea-member-api-openapi.yml",
+    "crea-office-api-openapi.yml",
+    "crea-destination-api-openapi.yml",
+    "crea-lead-api-openapi.yml",
+    "crea-openhouse-api-openapi.yml",
+    "crea-property-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [
+    "crea-realtor-ca-board-api-openapi.json: info.version missing"
+  ],
+  "notes": [
+    "1 archived document(s) dropped as subsets of other archived documents",
+    "sourced from openapi/_original/ (2 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "crea-realtor-ca-board-api-openapi.json: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "crea-realtor-ca-ddf-web-api-openapi.json: upgraded openapi 3.0.4 -> OpenAPI 3.2.0; renamed 34 component key(s) illegal in 3.x (e.g. DDF.Infrastructure.Swagger.ExampleModels.ODataListResponse`1[[DDF.Core.Entities.Destination, DDF.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]])",
+    "crea-realtor-ca-ddf-web-api-openapi.json: declared missing tag: OpenHouse",
+    "tag 'Member' spans 2 source specs (crea-realtor-ca-board-api-openapi.json, crea-realtor-ca-ddf-web-api-openapi.json): per-path servers applied",
+    "tag 'Office' spans 2 source specs (crea-realtor-ca-board-api-openapi.json, crea-realtor-ca-ddf-web-api-openapi.json): per-path servers applied",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "_original/crea-realtor-ca-ddf-web-api-swagger-endpoint-openapi.json: archived document superseded by a larger archived document",
+    "crea-destination-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "crea-lead-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "crea-member-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "crea-office-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "crea-openhouse-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "crea-property-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}
