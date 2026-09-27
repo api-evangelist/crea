@@ -422,6 +422,198 @@ paths:
     - url: https://localhost:7051
 components:
   schemas:
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        detail:
+          type:
+          - string
+          - 'null'
+        instance:
+          type:
+          - string
+          - 'null'
+      additionalProperties: {}
+    SocialMedia:
+      type: object
+      properties:
+        SocialMediaKey:
+          type:
+          - string
+          - 'null'
+          description: The local, well-known identifier. This value may not be unique, specifically in the case of aggregation systems, this value should be the identifier from the original system.
+          example: '123'
+        SocialMediaUrlOrId:
+          type:
+          - string
+          - 'null'
+          description: The website URL or ID of social media site or account of the member.
+          example: https:///www.abc.com
+        SocialMediaType:
+          enum:
+          - Website
+          - FaceBook
+          - LinkedIn
+          - Twitter
+          - Instagram
+          type:
+          - string
+          - 'null'
+          description: "For the complete list of enum values, please visit https://support.crea.ca/Boards/NDS/LookupTypes. \n\n The type of sites, blog, social media, the Member URL or ID is referring to."
+          example: Facebook
+        ResourceName:
+          enum:
+          - Office
+          - Member
+          - Property
+          type:
+          - string
+          - 'null'
+          description: The resource or table of the listing or other record the media relates to.
+          example: Office
+        ResourceRecordKey:
+          type:
+          - string
+          - 'null'
+          description: The primary key of the related record from the source resource. For example the ListingKey, MemberKey, OfficeKey, etc. This is a foreign key from the resource selected in the ResourceName field.
+          example: '91'
+        ModificationTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The transactional timestamp automatically recorded by the MLS system representing the date/time the media record was last modified.
+          format: date-time
+          example: '2021-01-01T00:00:00Z'
+        SocialMediaTypeId:
+          type:
+          - string
+          - 'null'
+          writeOnly: true
+        ResourceNameId:
+          type:
+          - string
+          - 'null'
+          writeOnly: true
+        SocialMediaKeyNumeric:
+          type: integer
+          format: int32
+          writeOnly: true
+        ResourceRecordKeyNumeric:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          writeOnly: true
+      additionalProperties: false
+    Media:
+      type: object
+      properties:
+        MediaKey:
+          type:
+          - string
+          - 'null'
+          description: A unique identifier for this record from the immediate source.
+          example: '1234'
+        LongDescription:
+          type:
+          - string
+          - 'null'
+          description: The full description of the object.
+          example: REALTOR.ca Logo
+        MediaURL:
+          type:
+          - string
+          - 'null'
+          description: The URI to the media file referenced by this record.
+          example: https:///ddfcdn.realtor.ca/realtorlogo.png
+        Order:
+          type:
+          - integer
+          - 'null'
+          description: The order in which the media object is displayed. Zero is the primary photo per RETS convention.
+          format: int32
+          example: 1
+        PreferredPhotoYN:
+          type:
+          - boolean
+          - 'null'
+          description: When set to true, the media record in question is the preferred photo. This will typically mean the photo to be shown when only one of the photos is to be displayed.
+          example: true
+        ResourceRecordId:
+          type:
+          - string
+          - 'null'
+          description: The well known identifier of the related record from the source resource.
+          example: '123'
+        MediaCategory:
+          enum:
+          - Alternate Feature Sheet Website
+          - Video Tour Website
+          - Sound Bite Website
+          - Sales Brochure Website
+          - Additional Pictures Website
+          type:
+          - string
+          - 'null'
+          description: "For the complete list of enum values, please visit https://support.crea.ca/Boards/NDS/LookupTypes. \n\n Category describing the , Photos, Documents, Video, Unbranded Virtual Tour, Branded Virtual Tour, Floor Plan, Logo"
+          example: Office Logo
+        ResourceName:
+          enum:
+          - Office
+          - Member
+          - Property
+          type:
+          - string
+          - 'null'
+          description: The resource or table of the listing or other record the media relates to. i.e. Property, Member, Office, etc.
+          example: Office
+        ResourceRecordKey:
+          type:
+          - string
+          - 'null'
+          description: The primary key of the related record from the source resource.
+          example: '1234'
+        ModificationTimestamp:
+          type:
+          - string
+          - 'null'
+          description: Date/time the record was last modified.
+          format: date-time
+          example: '2019-08-24T14:15:22Z'
+        ResourceNameId:
+          type:
+          - string
+          - 'null'
+          writeOnly: true
+        MediaCategoryId:
+          type:
+          - string
+          - 'null'
+          writeOnly: true
+        MediaKeyNumeric:
+          type: integer
+          format: int64
+          writeOnly: true
+        ResourceRecordKeyNumeric:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          writeOnly: true
+      additionalProperties: false
     Member:
       type: object
       properties:
@@ -699,197 +891,27 @@ components:
           writeOnly: true
       additionalProperties: false
       description: A collection of members.
-    Media:
+    DDF.Core.Models.Error:
       type: object
       properties:
-        MediaKey:
+        details:
           type:
           - string
           - 'null'
-          description: A unique identifier for this record from the immediate source.
-          example: '1234'
-        LongDescription:
+        message:
           type:
           - string
           - 'null'
-          description: The full description of the object.
-          example: REALTOR.ca Logo
-        MediaURL:
+        code:
           type:
           - string
           - 'null'
-          description: The URI to the media file referenced by this record.
-          example: https:///ddfcdn.realtor.ca/realtorlogo.png
-        Order:
-          type:
-          - integer
-          - 'null'
-          description: The order in which the media object is displayed. Zero is the primary photo per RETS convention.
-          format: int32
-          example: 1
-        PreferredPhotoYN:
-          type:
-          - boolean
-          - 'null'
-          description: When set to true, the media record in question is the preferred photo. This will typically mean the photo to be shown when only one of the photos is to be displayed.
-          example: true
-        ResourceRecordId:
-          type:
-          - string
-          - 'null'
-          description: The well known identifier of the related record from the source resource.
-          example: '123'
-        MediaCategory:
-          enum:
-          - Alternate Feature Sheet Website
-          - Video Tour Website
-          - Sound Bite Website
-          - Sales Brochure Website
-          - Additional Pictures Website
-          type:
-          - string
-          - 'null'
-          description: "For the complete list of enum values, please visit https://support.crea.ca/Boards/NDS/LookupTypes. \n\n Category describing the , Photos, Documents, Video, Unbranded Virtual Tour, Branded Virtual Tour, Floor Plan, Logo"
-          example: Office Logo
-        ResourceName:
-          enum:
-          - Office
-          - Member
-          - Property
-          type:
-          - string
-          - 'null'
-          description: The resource or table of the listing or other record the media relates to. i.e. Property, Member, Office, etc.
-          example: Office
-        ResourceRecordKey:
-          type:
-          - string
-          - 'null'
-          description: The primary key of the related record from the source resource.
-          example: '1234'
-        ModificationTimestamp:
-          type:
-          - string
-          - 'null'
-          description: Date/time the record was last modified.
-          format: date-time
-          example: '2019-08-24T14:15:22Z'
-        ResourceNameId:
-          type:
-          - string
-          - 'null'
-          writeOnly: true
-        MediaCategoryId:
-          type:
-          - string
-          - 'null'
-          writeOnly: true
-        MediaKeyNumeric:
-          type: integer
-          format: int64
-          writeOnly: true
-        ResourceRecordKeyNumeric:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          writeOnly: true
       additionalProperties: false
-    ProblemDetails:
+    DDF.Core.Models.CustomOdataError:
       type: object
       properties:
-        type:
-          type:
-          - string
-          - 'null'
-        title:
-          type:
-          - string
-          - 'null'
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        detail:
-          type:
-          - string
-          - 'null'
-        instance:
-          type:
-          - string
-          - 'null'
-      additionalProperties: {}
-    SocialMedia:
-      type: object
-      properties:
-        SocialMediaKey:
-          type:
-          - string
-          - 'null'
-          description: The local, well-known identifier. This value may not be unique, specifically in the case of aggregation systems, this value should be the identifier from the original system.
-          example: '123'
-        SocialMediaUrlOrId:
-          type:
-          - string
-          - 'null'
-          description: The website URL or ID of social media site or account of the member.
-          example: https:///www.abc.com
-        SocialMediaType:
-          enum:
-          - Website
-          - FaceBook
-          - LinkedIn
-          - Twitter
-          - Instagram
-          type:
-          - string
-          - 'null'
-          description: "For the complete list of enum values, please visit https://support.crea.ca/Boards/NDS/LookupTypes. \n\n The type of sites, blog, social media, the Member URL or ID is referring to."
-          example: Facebook
-        ResourceName:
-          enum:
-          - Office
-          - Member
-          - Property
-          type:
-          - string
-          - 'null'
-          description: The resource or table of the listing or other record the media relates to.
-          example: Office
-        ResourceRecordKey:
-          type:
-          - string
-          - 'null'
-          description: The primary key of the related record from the source resource. For example the ListingKey, MemberKey, OfficeKey, etc. This is a foreign key from the resource selected in the ResourceName field.
-          example: '91'
-        ModificationTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The transactional timestamp automatically recorded by the MLS system representing the date/time the media record was last modified.
-          format: date-time
-          example: '2021-01-01T00:00:00Z'
-        SocialMediaTypeId:
-          type:
-          - string
-          - 'null'
-          writeOnly: true
-        ResourceNameId:
-          type:
-          - string
-          - 'null'
-          writeOnly: true
-        SocialMediaKeyNumeric:
-          type: integer
-          format: int32
-          writeOnly: true
-        ResourceRecordKeyNumeric:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          writeOnly: true
+        error:
+          $ref: '#/components/schemas/DDF.Core.Models.Error'
       additionalProperties: false
     DDF.Core.Entities.SocialMedia:
       type: object
@@ -930,6 +952,91 @@ components:
           - 'null'
           description: The website URL or ID of social media site or account of the member.
           example: '"SocialMediaUrlOrId"'
+      additionalProperties: false
+    DDF.Core.Entities.Media:
+      type: object
+      properties:
+        MediaKey:
+          type:
+          - string
+          - 'null'
+          description: A unique identifier for this record from the immediate source. This may be a number, or string that can include URI or other forms. This is the system you are connecting to and not necessarily the original source of the record.
+          example: MediaKey
+        LongDescription:
+          type:
+          - string
+          - 'null'
+          description: The full description of the object.
+          example: REALTOR.ca Logo
+        MediaURL:
+          type:
+          - string
+          - 'null'
+          description: The URI to the media file referenced by this record.
+          example: https:///ddfcdn.realtor.ca/realtorlogo.png
+        ModificationTimestamp:
+          type:
+          - String
+          - 'null'
+          description: Date/time the record was last modified (in Zulu time (UTC)).
+          format: 'Enum: DateTime'
+          example: '2019-08-24T14:15:22Z'
+        Order:
+          type:
+          - integer
+          - 'null'
+          description: The order in which the media object is displayed.  Zero is the primary photo per RETS convention.
+          format: int32
+          example: 1
+        PreferredPhotoYN:
+          type:
+          - boolean
+          - 'null'
+          description: When set to true, the media record in question is the preferred photo. This will typically mean the photo to be shown when only one of the photos is to be displayed.
+          example: true
+        ResourceRecordId:
+          type:
+          - string
+          - 'null'
+          description: The well known identifier of the related record from the source resource.
+          example: RealtorLogo.png
+        ResourceRecordKey:
+          type:
+          - string
+          - 'null'
+          description: The primary key of the related record from the source resource.
+          example: '1234'
+        ResourceName:
+          type:
+          - String
+          - 'null'
+          description: The resource or table of the listing or other record the media relates to. i.e. Property, Member, Office, etc.
+          format: 'Enum: ResourceName'
+          example: Member
+        MediaCategory:
+          type:
+          - String
+          - 'null'
+          description: Category describing the , Photos, Documents, Video, Unbranded Virtual Tour, Branded Virtual Tour, Floor Plan, Logo
+          format: 'Enum: MediaCategory'
+          example: Photo
+      additionalProperties: false
+    DDF.Core.Entities.MemberIdentifier:
+      type: object
+      properties:
+        MemberKey:
+          type:
+          - string
+          - 'null'
+          description: A unique identifier for this record.
+          example: '12345'
+        ModificationTimestamp:
+          type:
+          - string
+          - 'null'
+          description: Date/time the roster (member or office) record was last modified (in Zulu time (UTC)).
+          format: date-time
+          example: '"2021-01-01T12:00:00.000Z"'
       additionalProperties: false
     DDF.Core.Entities.Member:
       type: object
@@ -1384,89 +1491,6 @@ components:
           - 'null'
           description: This flag signifies the availability of a REALTOR®’s email address. It is intended for clients who use the Lead API endpoint to communicate with Realtors. If the flag is false, these clients should turn off the email REALTOR® function for the respective REALTOR®. Clients not using Lead API endpoint can disregard this field.
       additionalProperties: false
-    DDF.Core.Entities.Media:
-      type: object
-      properties:
-        MediaKey:
-          type:
-          - string
-          - 'null'
-          description: A unique identifier for this record from the immediate source. This may be a number, or string that can include URI or other forms. This is the system you are connecting to and not necessarily the original source of the record.
-          example: MediaKey
-        LongDescription:
-          type:
-          - string
-          - 'null'
-          description: The full description of the object.
-          example: REALTOR.ca Logo
-        MediaURL:
-          type:
-          - string
-          - 'null'
-          description: The URI to the media file referenced by this record.
-          example: https:///ddfcdn.realtor.ca/realtorlogo.png
-        ModificationTimestamp:
-          type:
-          - String
-          - 'null'
-          description: Date/time the record was last modified (in Zulu time (UTC)).
-          format: 'Enum: DateTime'
-          example: '2019-08-24T14:15:22Z'
-        Order:
-          type:
-          - integer
-          - 'null'
-          description: The order in which the media object is displayed.  Zero is the primary photo per RETS convention.
-          format: int32
-          example: 1
-        PreferredPhotoYN:
-          type:
-          - boolean
-          - 'null'
-          description: When set to true, the media record in question is the preferred photo. This will typically mean the photo to be shown when only one of the photos is to be displayed.
-          example: true
-        ResourceRecordId:
-          type:
-          - string
-          - 'null'
-          description: The well known identifier of the related record from the source resource.
-          example: RealtorLogo.png
-        ResourceRecordKey:
-          type:
-          - string
-          - 'null'
-          description: The primary key of the related record from the source resource.
-          example: '1234'
-        ResourceName:
-          type:
-          - String
-          - 'null'
-          description: The resource or table of the listing or other record the media relates to. i.e. Property, Member, Office, etc.
-          format: 'Enum: ResourceName'
-          example: Member
-        MediaCategory:
-          type:
-          - String
-          - 'null'
-          description: Category describing the , Photos, Documents, Video, Unbranded Virtual Tour, Branded Virtual Tour, Floor Plan, Logo
-          format: 'Enum: MediaCategory'
-          example: Photo
-      additionalProperties: false
-    ? DDF.Infrastructure.Swagger.ExampleModels.ODataReplicationListResponse_2__DDF.Core.Entities.MemberIdentifier__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null___DDF.Core.Entities.Member__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null
-    : type: object
-      properties:
-        '@odata.context':
-          type:
-          - string
-          - 'null'
-          example: https://localhost:7051/odata/v1/$metadata#DDF.Core.Entities.Member
-        value:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DDF.Core.Entities.MemberIdentifier'
-      additionalProperties: false
     ? DDF.Infrastructure.Swagger.ExampleModels.ODataListResponse_1__DDF.Core.Entities.Member__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null
     : type: object
       properties:
@@ -1487,44 +1511,20 @@ components:
           - 'null'
           example: https://localhost:7051/odata/v1/DDF.Core.Entities.Member?skip=1
       additionalProperties: false
-    DDF.Core.Models.CustomOdataError:
-      type: object
+    ? DDF.Infrastructure.Swagger.ExampleModels.ODataReplicationListResponse_2__DDF.Core.Entities.MemberIdentifier__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null___DDF.Core.Entities.Member__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null
+    : type: object
       properties:
-        error:
-          $ref: '#/components/schemas/DDF.Core.Models.Error'
-      additionalProperties: false
-    DDF.Core.Models.Error:
-      type: object
-      properties:
-        details:
+        '@odata.context':
           type:
           - string
           - 'null'
-        message:
+          example: https://localhost:7051/odata/v1/$metadata#DDF.Core.Entities.Member
+        value:
           type:
-          - string
+          - array
           - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    DDF.Core.Entities.MemberIdentifier:
-      type: object
-      properties:
-        MemberKey:
-          type:
-          - string
-          - 'null'
-          description: A unique identifier for this record.
-          example: '12345'
-        ModificationTimestamp:
-          type:
-          - string
-          - 'null'
-          description: Date/time the roster (member or office) record was last modified (in Zulu time (UTC)).
-          format: date-time
-          example: '"2021-01-01T12:00:00.000Z"'
+          items:
+            $ref: '#/components/schemas/DDF.Core.Entities.MemberIdentifier'
       additionalProperties: false
 x-refined-from:
 - crea-realtor-ca-board-api-openapi.json

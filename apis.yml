@@ -57,8 +57,11 @@ accessModel:
   generated: '2026-09-02'
   method: derived
 image: https://www.crea.ca/dist/favicons/apple-touch-icon.png
+x-docs-platform: redocly
+x-docs-platform-confidence: medium
+x-docs-platform-checked: 2026-09-24
 tags:
-- Real-Estate
+- Real Estate
 - Canada
 - Property Listings
 - MLS
@@ -79,6 +82,7 @@ tags_raw:
 - Industry Body
 - PropTech
 - Data Syndication
+- Real-Estate
 created: '2026-07-26'
 modified: '2026-07-26'
 specificationVersion: '0.23'
