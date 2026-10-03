@@ -447,77 +447,6 @@ components:
           - string
           - 'null'
       additionalProperties: {}
-    SocialMedia:
-      type: object
-      properties:
-        SocialMediaKey:
-          type:
-          - string
-          - 'null'
-          description: The local, well-known identifier. This value may not be unique, specifically in the case of aggregation systems, this value should be the identifier from the original system.
-          example: '123'
-        SocialMediaUrlOrId:
-          type:
-          - string
-          - 'null'
-          description: The website URL or ID of social media site or account of the member.
-          example: https:///www.abc.com
-        SocialMediaType:
-          enum:
-          - Website
-          - FaceBook
-          - LinkedIn
-          - Twitter
-          - Instagram
-          type:
-          - string
-          - 'null'
-          description: "For the complete list of enum values, please visit https://support.crea.ca/Boards/NDS/LookupTypes. \n\n The type of sites, blog, social media, the Member URL or ID is referring to."
-          example: Facebook
-        ResourceName:
-          enum:
-          - Office
-          - Member
-          - Property
-          type:
-          - string
-          - 'null'
-          description: The resource or table of the listing or other record the media relates to.
-          example: Office
-        ResourceRecordKey:
-          type:
-          - string
-          - 'null'
-          description: The primary key of the related record from the source resource. For example the ListingKey, MemberKey, OfficeKey, etc. This is a foreign key from the resource selected in the ResourceName field.
-          example: '91'
-        ModificationTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The transactional timestamp automatically recorded by the MLS system representing the date/time the media record was last modified.
-          format: date-time
-          example: '2021-01-01T00:00:00Z'
-        SocialMediaTypeId:
-          type:
-          - string
-          - 'null'
-          writeOnly: true
-        ResourceNameId:
-          type:
-          - string
-          - 'null'
-          writeOnly: true
-        SocialMediaKeyNumeric:
-          type: integer
-          format: int32
-          writeOnly: true
-        ResourceRecordKeyNumeric:
-          type:
-          - integer
-          - 'null'
-          format: int32
-          writeOnly: true
-      additionalProperties: false
     Office:
       type: object
       properties:
@@ -709,6 +638,77 @@ components:
           format: date-time
           writeOnly: true
       additionalProperties: false
+    SocialMedia:
+      type: object
+      properties:
+        SocialMediaKey:
+          type:
+          - string
+          - 'null'
+          description: The local, well-known identifier. This value may not be unique, specifically in the case of aggregation systems, this value should be the identifier from the original system.
+          example: '123'
+        SocialMediaUrlOrId:
+          type:
+          - string
+          - 'null'
+          description: The website URL or ID of social media site or account of the member.
+          example: https:///www.abc.com
+        SocialMediaType:
+          enum:
+          - Website
+          - FaceBook
+          - LinkedIn
+          - Twitter
+          - Instagram
+          type:
+          - string
+          - 'null'
+          description: "For the complete list of enum values, please visit https://support.crea.ca/Boards/NDS/LookupTypes. \n\n The type of sites, blog, social media, the Member URL or ID is referring to."
+          example: Facebook
+        ResourceName:
+          enum:
+          - Office
+          - Member
+          - Property
+          type:
+          - string
+          - 'null'
+          description: The resource or table of the listing or other record the media relates to.
+          example: Office
+        ResourceRecordKey:
+          type:
+          - string
+          - 'null'
+          description: The primary key of the related record from the source resource. For example the ListingKey, MemberKey, OfficeKey, etc. This is a foreign key from the resource selected in the ResourceName field.
+          example: '91'
+        ModificationTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The transactional timestamp automatically recorded by the MLS system representing the date/time the media record was last modified.
+          format: date-time
+          example: '2021-01-01T00:00:00Z'
+        SocialMediaTypeId:
+          type:
+          - string
+          - 'null'
+          writeOnly: true
+        ResourceNameId:
+          type:
+          - string
+          - 'null'
+          writeOnly: true
+        SocialMediaKeyNumeric:
+          type: integer
+          format: int32
+          writeOnly: true
+        ResourceRecordKeyNumeric:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          writeOnly: true
+      additionalProperties: false
     Media:
       type: object
       properties:
@@ -804,251 +804,6 @@ components:
           - 'null'
           format: int32
           writeOnly: true
-      additionalProperties: false
-    DDF.Core.Entities.Office:
-      type: object
-      properties:
-        OfficeKey:
-          type:
-          - string
-          - 'null'
-          description: A unique identifier for this record from the immediate source. This is the string only key and used as an alternative to the OfficeKeyNumeric fields.
-          example: OfficeKey
-        OfficeMlsId:
-          type:
-          - string
-          - 'null'
-          description: The local, well-known identifier. This value may not be unique, specifically in the case of aggregation systems, this value should be the identifier from the original system.
-          example: OfficeMlsId
-        OfficeAORKey:
-          type:
-          - string
-          - 'null'
-          description: A system unique identifier. This is the Board ID of the Office's Primary Board or Association of REALTORS.
-          example: OfficeAORKey
-        OfficeNationalAssociationId:
-          type:
-          - string
-          - 'null'
-          description: The national association ID of the office. i.e. In Canada, this is the CREA Organization ID of the Office.
-          example: OfficeNationalAssociationId
-        FranchiseNationalAssociationId:
-          type:
-          - string
-          - 'null'
-          description: The national association ID of the Franchisor. In Canada this would be the CREAID
-          example: '0'
-        OfficeBrokerNationalAssociationId:
-          type:
-          - string
-          - 'null'
-          description: The national association Id of the Brokerage Owner. In Canada this would be the CREAID
-          example: OfficeBrokerNationalAssociationId
-        OfficeAddress1:
-          type:
-          - string
-          - 'null'
-          description: The street number, direction, name and suffix of the office.
-          example: OfficeAddress1
-        OfficeAddress2:
-          type:
-          - string
-          - 'null'
-          description: The unit/suite number of the office.
-          example: OfficeAddress2
-        OfficeCity:
-          type:
-          - string
-          - 'null'
-          description: The city of the office.
-          example: OfficeCity
-        OfficeFax:
-          type:
-          - string
-          - 'null'
-          description: 'North American 10 digit fax numbers should be in the format of ###-###-#### (separated by hyphens). Other conventions should use the common local standard. International numbers should be preceded by a plus symbol.'
-          example: OfficeFax
-        OfficeName:
-          type:
-          - string
-          - 'null'
-          description: The legal name of the brokerage.
-          example: OfficeName
-        OfficePhone:
-          type:
-          - string
-          - 'null'
-          description: 'North American 10 digit phone numbers should be in the format of ###-###-#### (separated by hyphens). Other conventions should use the common local standard. International numbers should be preceded by a plus symbol.'
-          example: OfficePhone
-        OfficePhoneExt:
-          type:
-          - string
-          - 'null'
-          description: The extension of the given phone number (if applicable).
-          example: OfficePhoneExt
-        OfficePostalCode:
-          type:
-          - string
-          - 'null'
-          description: The postal code of the office.
-          example: OfficePostalCode
-        Media:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DDF.Core.Entities.Media'
-          description: A collection of the types of media fields available for this Office.
-        OfficeSocialMedia:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DDF.Core.Entities.SocialMedia'
-          description: A collection of the types of social media fields available for this office. The collection includes the type of system and other details pertinent about social media
-        ModificationTimestamp:
-          type:
-          - String
-          - 'null'
-          description: Date/time the roster (member or office) record was last modified (in Zulu time (UTC)).
-          format: 'Enum: DateTime'
-          example: '"2021-01-01T12:00:00.000Z"'
-        OriginalEntryTimestamp:
-          type:
-          - String
-          - 'null'
-          description: Date/time the office record was originally input into the source system (in Zulu time (UTC)).
-          format: 'Enum: DateTime'
-          example: '"2021-01-01T12:00:00.000Z"'
-        OfficeType:
-          type:
-          - String
-          - 'null'
-          description: The type of business conducted by the office. i.e. Real Estate, Appraiser, etc.
-          format: 'Enum: OfficeType'
-          example: Real Estate
-        OfficeStateOrProvince:
-          type:
-          - String
-          - 'null'
-          description: The state or province in which the office is located.
-          format: 'Enum: StateOrProvince'
-          example: Ontario
-        OfficeAOR:
-          type:
-          - String
-          - 'null'
-          description: The Office's Board or Association of REALTORS.
-          format: 'Enum: AOR'
-          example: Affiliate
-        OfficeStatus:
-          type:
-          - String
-          - 'null'
-          description: Is the office active, inactive or under disciplinary action.
-          format: 'Enum: OfficeStatus'
-          example: Active
-        OfficeCountry:
-          type:
-          - String
-          - 'null'
-          description: The country in a postal address.
-          format: 'Enum: Country'
-          example: Canada
-      additionalProperties: false
-    DDF.Core.Models.Error:
-      type: object
-      properties:
-        details:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    ? DDF.Infrastructure.Swagger.ExampleModels.ODataReplicationListResponse_2__DDF.Core.Entities.OfficeIdentifier__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null___DDF.Core.Entities.Office__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null
-    : type: object
-      properties:
-        '@odata.context':
-          type:
-          - string
-          - 'null'
-          example: https://localhost:7051/odata/v1/$metadata#DDF.Core.Entities.Office
-        value:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DDF.Core.Entities.OfficeIdentifier'
-      additionalProperties: false
-    DDF.Core.Models.CustomOdataError:
-      type: object
-      properties:
-        error:
-          $ref: '#/components/schemas/DDF.Core.Models.Error'
-      additionalProperties: false
-    DDF.Core.Entities.OfficeIdentifier:
-      type: object
-      properties:
-        OfficeKey:
-          type:
-          - string
-          - 'null'
-          description: A unique identifier for this record from the immediate source. This is the numeric only key and used as an alternative to the OfficeKey fields.
-          example: '12345'
-        ModificationTimestamp:
-          type:
-          - string
-          - 'null'
-          description: Date/time the roster (member or office) record was last modified (in Zulu time (UTC)).
-          format: date-time
-          example: '"2021-01-01T12:00:00.000Z"'
-      additionalProperties: false
-    DDF.Core.Entities.SocialMedia:
-      type: object
-      properties:
-        SocialMediaKey:
-          type:
-          - string
-          - 'null'
-          description: The local, well-known identifier. This value may not be unique, specifically in the case of aggregation systems, this value should be the identifier from the original system.
-          example: SocialMediaKey
-        ResourceRecordKey:
-          type:
-          - string
-          - 'null'
-          description: The primary key of the related record from the source resource. For example the ListingKey, MemberKey, OfficeKey, etc. This is a foreign key from the resource selected in the ResourceName field.
-          example: '12345'
-        SocialMediaType:
-          type:
-          - String
-          - 'null'
-          description: The type of sites, blog, social media, the Member URL or ID is referring to. i.e. Website, FaceBook, LinkedIn, Twitter, Instagram, etc.
-          format: 'Enum: SocialMediaType'
-          example: FaceBook
-        ModificationTimestamp:
-          type: String
-          description: The transactional timestamp automatically recorded by the MLS system representing the date/time the media record was last modified (in Zulu time (UTC)).
-          format: date-time
-          example: '"2021-01-01T00:00:00.000Z"'
-        ResourceName:
-          type:
-          - String
-          - 'null'
-          description: The resource or table of the listing or other record the media relates to. i.e. Property, Member, Office, etc.
-          format: 'Enum: ResourceName'
-        SocialMediaUrlOrId:
-          type:
-          - string
-          - 'null'
-          description: The website URL or ID of social media site or account of the member.
-          example: '"SocialMediaUrlOrId"'
       additionalProperties: false
     DDF.Core.Entities.Media:
       type: object
@@ -1274,6 +1029,211 @@ components:
           format: 'Enum: Country'
           example: Canada
       additionalProperties: false
+    ? DDF.Infrastructure.Swagger.ExampleModels.ODataReplicationListResponse_2__DDF.Core.Entities.OfficeIdentifier__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null___DDF.Core.Entities.Office__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null
+    : type: object
+      properties:
+        '@odata.context':
+          type:
+          - string
+          - 'null'
+          example: https://localhost:7051/odata/v1/$metadata#DDF.Core.Entities.Office
+        value:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DDF.Core.Entities.OfficeIdentifier'
+      additionalProperties: false
+    DDF.Core.Entities.OfficeIdentifier:
+      type: object
+      properties:
+        OfficeKey:
+          type:
+          - string
+          - 'null'
+          description: A unique identifier for this record from the immediate source. This is the numeric only key and used as an alternative to the OfficeKey fields.
+          example: '12345'
+        ModificationTimestamp:
+          type:
+          - string
+          - 'null'
+          description: Date/time the roster (member or office) record was last modified (in Zulu time (UTC)).
+          format: date-time
+          example: '"2021-01-01T12:00:00.000Z"'
+      additionalProperties: false
+    DDF.Core.Entities.Office:
+      type: object
+      properties:
+        OfficeKey:
+          type:
+          - string
+          - 'null'
+          description: A unique identifier for this record from the immediate source. This is the string only key and used as an alternative to the OfficeKeyNumeric fields.
+          example: OfficeKey
+        OfficeMlsId:
+          type:
+          - string
+          - 'null'
+          description: The local, well-known identifier. This value may not be unique, specifically in the case of aggregation systems, this value should be the identifier from the original system.
+          example: OfficeMlsId
+        OfficeAORKey:
+          type:
+          - string
+          - 'null'
+          description: A system unique identifier. This is the Board ID of the Office's Primary Board or Association of REALTORS.
+          example: OfficeAORKey
+        OfficeNationalAssociationId:
+          type:
+          - string
+          - 'null'
+          description: The national association ID of the office. i.e. In Canada, this is the CREA Organization ID of the Office.
+          example: OfficeNationalAssociationId
+        FranchiseNationalAssociationId:
+          type:
+          - string
+          - 'null'
+          description: The national association ID of the Franchisor. In Canada this would be the CREAID
+          example: '0'
+        OfficeBrokerNationalAssociationId:
+          type:
+          - string
+          - 'null'
+          description: The national association Id of the Brokerage Owner. In Canada this would be the CREAID
+          example: OfficeBrokerNationalAssociationId
+        OfficeAddress1:
+          type:
+          - string
+          - 'null'
+          description: The street number, direction, name and suffix of the office.
+          example: OfficeAddress1
+        OfficeAddress2:
+          type:
+          - string
+          - 'null'
+          description: The unit/suite number of the office.
+          example: OfficeAddress2
+        OfficeCity:
+          type:
+          - string
+          - 'null'
+          description: The city of the office.
+          example: OfficeCity
+        OfficeFax:
+          type:
+          - string
+          - 'null'
+          description: 'North American 10 digit fax numbers should be in the format of ###-###-#### (separated by hyphens). Other conventions should use the common local standard. International numbers should be preceded by a plus symbol.'
+          example: OfficeFax
+        OfficeName:
+          type:
+          - string
+          - 'null'
+          description: The legal name of the brokerage.
+          example: OfficeName
+        OfficePhone:
+          type:
+          - string
+          - 'null'
+          description: 'North American 10 digit phone numbers should be in the format of ###-###-#### (separated by hyphens). Other conventions should use the common local standard. International numbers should be preceded by a plus symbol.'
+          example: OfficePhone
+        OfficePhoneExt:
+          type:
+          - string
+          - 'null'
+          description: The extension of the given phone number (if applicable).
+          example: OfficePhoneExt
+        OfficePostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code of the office.
+          example: OfficePostalCode
+        Media:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DDF.Core.Entities.Media'
+          description: A collection of the types of media fields available for this Office.
+        OfficeSocialMedia:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DDF.Core.Entities.SocialMedia'
+          description: A collection of the types of social media fields available for this office. The collection includes the type of system and other details pertinent about social media
+        ModificationTimestamp:
+          type:
+          - String
+          - 'null'
+          description: Date/time the roster (member or office) record was last modified (in Zulu time (UTC)).
+          format: 'Enum: DateTime'
+          example: '"2021-01-01T12:00:00.000Z"'
+        OriginalEntryTimestamp:
+          type:
+          - String
+          - 'null'
+          description: Date/time the office record was originally input into the source system (in Zulu time (UTC)).
+          format: 'Enum: DateTime'
+          example: '"2021-01-01T12:00:00.000Z"'
+        OfficeType:
+          type:
+          - String
+          - 'null'
+          description: The type of business conducted by the office. i.e. Real Estate, Appraiser, etc.
+          format: 'Enum: OfficeType'
+          example: Real Estate
+        OfficeStateOrProvince:
+          type:
+          - String
+          - 'null'
+          description: The state or province in which the office is located.
+          format: 'Enum: StateOrProvince'
+          example: Ontario
+        OfficeAOR:
+          type:
+          - String
+          - 'null'
+          description: The Office's Board or Association of REALTORS.
+          format: 'Enum: AOR'
+          example: Affiliate
+        OfficeStatus:
+          type:
+          - String
+          - 'null'
+          description: Is the office active, inactive or under disciplinary action.
+          format: 'Enum: OfficeStatus'
+          example: Active
+        OfficeCountry:
+          type:
+          - String
+          - 'null'
+          description: The country in a postal address.
+          format: 'Enum: Country'
+          example: Canada
+      additionalProperties: false
+    DDF.Core.Models.Error:
+      type: object
+      properties:
+        details:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    DDF.Core.Models.CustomOdataError:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/DDF.Core.Models.Error'
+      additionalProperties: false
     ? DDF.Infrastructure.Swagger.ExampleModels.ODataListResponse_1__DDF.Core.Entities.Office__DDF.Core__Version_1.0.0.0__Culture_neutral__PublicKeyToken_null
     : type: object
       properties:
@@ -1293,6 +1253,46 @@ components:
           - string
           - 'null'
           example: https://localhost:7051/odata/v1/DDF.Core.Entities.Office?skip=1
+      additionalProperties: false
+    DDF.Core.Entities.SocialMedia:
+      type: object
+      properties:
+        SocialMediaKey:
+          type:
+          - string
+          - 'null'
+          description: The local, well-known identifier. This value may not be unique, specifically in the case of aggregation systems, this value should be the identifier from the original system.
+          example: SocialMediaKey
+        ResourceRecordKey:
+          type:
+          - string
+          - 'null'
+          description: The primary key of the related record from the source resource. For example the ListingKey, MemberKey, OfficeKey, etc. This is a foreign key from the resource selected in the ResourceName field.
+          example: '12345'
+        SocialMediaType:
+          type:
+          - String
+          - 'null'
+          description: The type of sites, blog, social media, the Member URL or ID is referring to. i.e. Website, FaceBook, LinkedIn, Twitter, Instagram, etc.
+          format: 'Enum: SocialMediaType'
+          example: FaceBook
+        ModificationTimestamp:
+          type: String
+          description: The transactional timestamp automatically recorded by the MLS system representing the date/time the media record was last modified (in Zulu time (UTC)).
+          format: date-time
+          example: '"2021-01-01T00:00:00.000Z"'
+        ResourceName:
+          type:
+          - String
+          - 'null'
+          description: The resource or table of the listing or other record the media relates to. i.e. Property, Member, Office, etc.
+          format: 'Enum: ResourceName'
+        SocialMediaUrlOrId:
+          type:
+          - string
+          - 'null'
+          description: The website URL or ID of social media site or account of the member.
+          example: '"SocialMediaUrlOrId"'
       additionalProperties: false
 x-refined-from:
 - crea-realtor-ca-board-api-openapi.json
