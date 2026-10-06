@@ -84,7 +84,7 @@ tags_raw:
 - Data Syndication
 - Real-Estate
 created: '2026-07-26'
-modified: '2026-07-26'
+modified: '2026-10-06'
 specificationVersion: '0.23'
 apis:
 - aid: crea:crea-destination-api
@@ -262,6 +262,8 @@ apis:
   - type: APIReference
     url: https://boardapi-docs.realtor.ca/#tag/Member
 common:
+- url: https://www.crea.ca/media-hub/news/
+  type: Blog
 - type: CapabilityMap
   url: capabilities/crea-capability-edges.yml
   name: CREA (REALTOR.ca) Business Capability Map
