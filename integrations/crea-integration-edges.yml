@@ -1,0 +1,25 @@
+edges:
+- partner_name: RESO
+  partner: reso
+  type: contract
+  channel: network-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://services.reso.org/orgs?showStats=true&showEndorsements=true
+  contract_reference:
+    register: RESO organizations and endorsements (Real Estate Standards Organization)
+    spec_file: null
+    role: National Association
+    tier: member
+    registered_name: Canadian Real Estate Association (CREA)
+    organization_uoi: A00000026
+    matched_domain: crea.ca
+    matched_by: domain
+    endorsements: null
+    summary_url: null
+    detected_by: sweep-real-estate.py
+    detected: '2026-10-13'
+generated: '2026-10-13'
+method: searched
+checked:
+- https://services.reso.org/orgs?showStats=true&showEndorsements=true
