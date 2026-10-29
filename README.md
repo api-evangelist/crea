@@ -1,4 +1,4 @@
-# CREA (REALTOR.ca) (crea)
+# CREA (REALTOR.ca)
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,124 +64,133 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-The Canadian Real Estate Association (CREA) is the national industry body for Canadian residential real estate, representing roughly 160,000 REALTORS through some 60 member boards and associations, owning the MLS and REALTOR trademarks in Canada, and operating REALTOR.ca — the country's single national consumer listing portal. Where the United States fragments into roughly 500 independently governed MLSs, Canada consolidates: CREA runs the REALTOR.ca Data Distribution Facility (DDF), one national syndication seam that collects listing content from member boards' MLS Systems and redistributes it to member websites, franchisor pools, and a network of Real Estate Advertising Websites. That makes CREA simultaneously the standards-setter, the operator of the pipe, and the gatekeeper of the data. Its API posture is unusually good for an industry body and still firmly gated: three real machine-readable contracts are downloadable anonymously, but nothing is self-serve, the OData `$metadata` document returns HTTP 401, and CREA is RESO-aligned rather than RESO-certified.
+The Canadian Real Estate Association (CREA) is the national industry body for Canadian residential real estate, representing roughly 160,000 REALTORS through some 60 member boards and associations, owning the MLS and REALTOR trademarks in Canada, and operating REALTOR.ca - the country's single national consumer listing portal. Where the United States fragments into roughly 500 independently governed MLSs, Canada consolidates: CREA runs the REALTOR.ca Data Distribution Facility (DDF), one national syndication seam that collects listing content from member boards' MLS Systems and redistributes it to member websites, franchisor pools, and a network of Real Estate Advertising Websites. That makes CREA simultaneously the standards-setter (it writes the DDF Policy and Rules that boards must adopt and enforce), the operator of the pipe, and the gatekeeper of the data. Its API posture is unusually good for an industry body and still firmly gated. Three real machine-readable contracts are downloadable anonymously - an OpenAPI 3.0.4 document for the DDF Web API served from ddfapi.realtor.ca/swagger/v1/swagger.json and embedded in the public Redoc site at ddfapi-docs.realtor.ca, an OpenAPI 3.0.1 document for the REALTOR.ca Board API at boardapi-docs.realtor.ca, and a full OpenID Connect discovery document at identity.crea.ca. The DDF Web API is an OData v4 surface normalized to the RESO Data Dictionary and described by CREA as built on the RESO Web API specification, but CREA is RESO-aligned rather than RESO-certified - it does not appear in RESO's public certification directory of 578 organizations, where the only Canadian entries are individual boards such as the Toronto Regional Real Estate Board and Greater Vancouver REALTORS, none of them Certified Current. Nothing is self-serve. There is no signup, no sandbox and no free tier; client_id and client_secret are, in CREA's own words, provided by CREA. A REALTOR must opt in through the DDF Dashboard on CREA's member portal, and a third-party developer must enter a data access agreement with CREA as a Technology Provider operating a National Pool Website or Member Website on behalf of that opted-in member. The OData $metadata document, the actual RESO contract, returns HTTP 401 to anonymous callers. No open, unlicensed Canadian listing dataset exists behind any of it.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/crea/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/crea/refs/heads/main/apis.yml)
+**Areas:** Real Estate · Canada · Property Listings · MLS · IDX · RESO · OData · Industry Body · PropTech · Data Syndication
 
-## Tags
+## CREA (REALTOR.ca) on APIs.io
 
-- Real Estate
-- Canada
-- Property Listings
-- MLS
-- IDX
-- RESO
-- OData
-- Industry Body
-- PropTech
-- Data Syndication
+Everything profiled for CREA (REALTOR.ca) is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/crea/](https://apis.io/providers/crea/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (6)
 
-- **Created:** 2026-07-26
-- **Modified:** 2026-07-26
+- [CREA (REALTOR.ca) Destination API](https://apis.io/apis/crea/crea-destination-api/) — Get details about each destination linked to the Technology Provider
+- [CREA (REALTOR.ca) Lead API](https://apis.io/apis/crea/crea-lead-api/) — Create Lead
+- [CREA (REALTOR.ca) Member API](https://apis.io/apis/crea/crea-member-api/) — This transaction is used to retrieve Member list for the specific board. Boards can access Member information of other Boards based on permissions granted.
+- [CREA (REALTOR.ca) Office API](https://apis.io/apis/crea/crea-office-api/) — This transaction is used to retrieve Office details for the specific board. Boards can access Office information of other Boards based on permissions granted.
+- [CREA (REALTOR.ca) Open House API](https://apis.io/apis/crea/crea-openhouse-api/) — The OpenHouse API from CREA (REALTOR.ca) — 2 operation(s) for openhouse.
+- [CREA (REALTOR.ca) Property API](https://apis.io/apis/crea/crea-property-api/) — Get Properties
 
-## APIs
+### Published properties
 
-### REALTOR.ca DDF Web API
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-CREA's national listing syndication API. Documented by CREA as querying "MLS System data using the RESO Web API specification, which is based on OData", with data "normalized based on the RESO Data Dictionary standards". Exposes OData v4 collections for Property, Member, Office, OpenHouse and Destination, plus timestamp-ordered Replication endpoints for periodic synchronization. The `$metadata` document — the actual RESO contract — returned HTTP 401 to an anonymous probe and could not be harvested.
+#### MCP servers (1)
 
-- **Human URL:** [https://ddfapi-docs.realtor.ca/](https://ddfapi-docs.realtor.ca/)
-- **Base URL:** `https://ddfapi.realtor.ca/odata/v1`
+Model Context Protocol servers that expose the API to agents.
 
-#### Tags
+- [crea-realtor-ca](https://apis.io/servers/crea/crea-realtor-ca/)
 
-- Property Listings
-- MLS
-- RESO
-- OData
-- Syndication
-- Canada
+#### Agentic access (1)
 
-#### Properties
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- [OpenAPI](openapi/crea-realtor-ca-ddf-web-api-openapi.json) — extracted verbatim from the public Redoc docs (HTTP 200, anonymous)
-- [OpenAPI](openapi/crea-realtor-ca-ddf-web-api-swagger-endpoint-openapi.json) — as served from `ddfapi.realtor.ca/swagger/v1/swagger.json` (HTTP 200, anonymous)
-- [Documentation](https://ddfapi-docs.realtor.ca/)
-- [API Reference](https://ddfapi.realtor.ca/api-docs)
-- [ChangeLog](https://ddfapi-docs.realtor.ca/releasenotes)
-- [Authentication](openapi/crea-identity-openid-configuration.json) — OpenID Connect discovery for `identity.crea.ca`
-- [Terms of Service](https://www.crea.ca/files/technology/english/DDFR-Policy-and-Rules-February-2024-ENG.pdf) — DDF Policy and Rules, January 2024
-- [Support Forum](https://support.crea.ca/DDF)
+- [Crea Agentic Access](https://apis.io/agentic-access/crea/crea-agentic-access/)
 
-### REALTOR.ca DDF Lead API
+#### Collections (4)
 
-A single documented `POST /v1/Lead/CreateLead` endpoint on the same host. Required because REALTOR email addresses are deliberately excluded from the DDF Web API payload — "Real Estate Advertising Websites (REAW) are required to use the DDF lead API, as email addresses are not included in the DDF Web API."
+Postman and Open Collection request collections.
 
-- **Human URL:** [https://ddfapi-docs.realtor.ca/](https://ddfapi-docs.realtor.ca/)
-- **Base URL:** `https://ddfapi.realtor.ca`
+- [API Collection](https://apis.io/collections/crea/open-crea-identity-openid-configuration/)
+- [REALTOR.ca Board API Documentation](https://apis.io/collections/crea/open-crea-realtor-ca-board-api/)
+- [REALTOR.ca DDF® Web API Documentation](https://apis.io/collections/crea/open-crea-realtor-ca-ddf-web-api/)
+- [REALTOR.ca DDF® Web API Documentation](https://apis.io/collections/crea/open-crea-realtor-ca-ddf-web-api-swagger-endpoint/)
 
-#### Tags
+#### Overlays (3)
 
-- Leads
-- Property Listings
-- Canada
+OpenAPI overlays, including conversational phrasing for each operation.
 
-#### Properties
+- [Crea Realtor Ca Board Api Overlay](https://apis.io/overlays/crea/crea-realtor-ca-board-api-overlay/)
+- [Crea Realtor Ca Ddf Web Api Overlay](https://apis.io/overlays/crea/crea-realtor-ca-ddf-web-api-overlay/)
+- [Crea Realtor Ca Ddf Web Api Swagger Endpoint Overlay](https://apis.io/overlays/crea/crea-realtor-ca-ddf-web-api-swagger-endpoint-overlay/)
 
-- [OpenAPI](openapi/crea-realtor-ca-ddf-web-api-openapi.json)
-- [Documentation](https://ddfapi-docs.realtor.ca/)
-- [Authentication](openapi/crea-identity-openid-configuration.json)
+#### Security (3)
 
-### REALTOR.ca Board API
+Authentication, trust centre, and vulnerability disclosure.
 
-A roster-distribution API for CREA's member boards rather than for listing consumers — "a data distribution API that allows Boards to access Members and Offices roster information built on modern industry standards", also "normalized based on the RESO Data Dictionary standards". Four documented operations over plain JSON; every request must carry `Accept: application/json` or the service answers HTTP 406.
+- [Crea Authentication](https://apis.io/security/crea/crea-authentication/)
+- [Crea Domain Security](https://apis.io/security/crea/crea-domain-security/)
+- [Crea Vulnerability Disclosure](https://apis.io/security/crea/crea-vulnerability-disclosure/)
 
-- **Human URL:** [https://boardapi-docs.realtor.ca/](https://boardapi-docs.realtor.ca/)
-- **Base URL:** `https://boardapi.realtor.ca/`
+#### OAuth scopes (1)
 
-#### Tags
+The permissions the API asks for.
 
-- Roster
-- Agents
-- Brokerages
-- RESO
-- Canada
+- [Crea Scopes](https://apis.io/scopes/crea/crea-scopes/)
 
-#### Properties
+## Where to find this API
 
-- [OpenAPI](openapi/crea-realtor-ca-board-api-openapi.json) — extracted verbatim from the public Redoc docs (HTTP 200, anonymous)
-- [Documentation](https://boardapi-docs.realtor.ca/)
-- [Authentication](openapi/crea-identity-openid-configuration.json)
-
-## RESO Posture
-
-**RESO-aligned, not RESO-certified.** CREA documents the DDF Web API as built on the RESO Web API specification and normalized to the RESO Data Dictionary, but names no version of either. CREA does not appear in RESO's public certification directory at [reso.org/certificates](https://www.reso.org/certificates/) — 578 organizations were parsed on 2026-07-26 and neither "CREA", "Canadian Real Estate Association" nor "REALTOR.ca" is among them. The only Canadian entries are individual boards (Toronto Regional Real Estate Board, Greater Vancouver REALTORS, Ottawa Real Estate Board, REALTORS Association of Edmonton, and others), and none of them is "Certified Current". No RESO Universal Property/Parcel Identifier (UPI) reference was found anywhere in CREA's surface.
-
-## Access Gate
-
-**Licence agreement, compounded by membership.** There is no signup, no sandbox and no free tier. CREA's own quickstarts list the prerequisites as "`client_id` — provided by CREA" and "`client_secret` — provided by CREA". The DDF Policy and Rules define the third-party door verbatim: "Technology Provider — a company that has entered into a data access agreement with CREA to operate a National Pool Website or a Member Website on behalf of a Participant." The member door requires being a REALTOR or Participating Brokerage and opting in through the DDF Dashboard on CREA's member portal. Credentials may not be shared with a Technology Provider. No open, unlicensed Canadian listing dataset exists.
-
-## Auth Model
-
-OAuth 2.0 / OpenID Connect client-credentials against `https://identity.crea.ca/connect/token`, returning a Bearer token valid for 60 minutes. The discovery document is served anonymously and advertises the scopes `openid`, `DDFApi_Read`, `OfferManagementApi.read.write`, `BoardDataApi.read` and `offline_access`.
-
-## Common Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://www.crea.ca/)
-- [REALTOR.ca](https://www.realtor.ca/)
-- [DDF Web API Documentation](https://ddfapi-docs.realtor.ca/)
-- [Board API Documentation](https://boardapi-docs.realtor.ca/)
-- [OpenID Connect Discovery](https://identity.crea.ca/.well-known/openid-configuration)
-- [DDF Dashboard (member login)](https://ddf.realtor.ca/)
-- [DDF Policy and Rules](https://www.crea.ca/files/technology/english/DDFR-Policy-and-Rules-February-2024-ENG.pdf)
-- [Support Forum](https://support.crea.ca/DDF)
-- [security.txt](https://www.crea.ca/.well-known/security.txt)
-- [Housing Market Statistics](https://www.crea.ca/housing-market-stats/)
-- [CREA Cafe](https://www.creacafe.ca/)
-- [LinkedIn](https://www.linkedin.com/company/canadian-real-estate-association)
+- [Documentation](https://ddfapi-docs.realtor.ca/)
+- [Getting started](https://ddfapi-docs.realtor.ca/#section/Quickstart-Overview)
+- [Blog](https://www.crea.ca/media-hub/news/)
+- [Security](https://www.crea.ca/.well-known/security.txt)
+- [Terms of service](https://www.crea.ca/files/technology/english/DDFR-Policy-and-Rules-February-2024-ENG.pdf)
+- [Privacy policy](https://www.crea.ca/privacy/)
 
-## Maintainers
+## API Evangelist rating
 
-- Kin Lane — kin@apievangelist.com
+**Kin Score 44.5** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 89.3 |
+| Contract quality | 45.1 |
+| Contract governance | 18.2 |
+| Operational transparency | 26.3 |
+| Developer ergonomics | 50.6 |
+| Access clarity | 27.6 |
+
+**Agent readiness 34.0** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | — |
+
+**Regulatory alignment 40.2** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/crea/](https://apis.io/providers/crea/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for CREA (REALTOR.ca): the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/crea/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
